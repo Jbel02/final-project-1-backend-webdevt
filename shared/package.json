@@ -1,0 +1,6 @@
+{
+  "name": "suitespot-shared",
+  "private": true,
+  "description": "Rules shared by client and server: constants, dates, pricing, validation. No dependencies.",
+  "type": "module"
+}

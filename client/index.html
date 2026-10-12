@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#f2f2f7" />
+    <meta
+      name="description"
+      content="SuiteSpot — book a room, manage the front desk and run the hotel."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>SuiteSpot</title>
+    <script>
+      // Runs before first paint so a dark-theme user never sees a white flash.
+      // Mirrors the rules in src/hooks/useThemeState.js — keep them in sync.
+      ;(() => {
+        try {
+          const stored = JSON.parse(localStorage.getItem('suitespot-theme'))
+          const theme =
+            stored === 'light' || stored === 'dark'
+              ? stored
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+          document.documentElement.setAttribute('data-theme', theme)
+        } catch {
+          /* private mode / storage disabled — the light default stands */
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

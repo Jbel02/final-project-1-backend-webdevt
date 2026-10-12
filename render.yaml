@@ -1,0 +1,23 @@
+# Render Blueprint for the SuiteSpot API (Express). The client is on Vercel,
+# which forwards /api/* here (see vercel.json), so the browser only ever talks
+# to one origin and the auth cookie stays first-party.
+#
+# The commands run from the repo root on purpose: the server imports ../shared.
+services:
+  - type: web
+    name: suitespot-api
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: cd server && npm ci --omit=dev
+    startCommand: cd server && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI # MongoDB Atlas connection string — set in the dashboard
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SEED_MANAGER_PASSWORD # manager password for the first, automatic seed
+        sync: false

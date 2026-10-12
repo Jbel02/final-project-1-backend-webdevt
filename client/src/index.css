@@ -1,0 +1,92 @@
+/* ===== Entry stylesheet =====
+   Tailwind v4 with the midterm's iOS design tokens as its theme.
+
+   - tokens.css   semantic colours, light + dark (unchanged from the midterm)
+   - base.css     reset additions and the iOS type scale
+   - device.css   the Desktop / iPad / iPhone preview frame (plain CSS — it is
+                  one-off chrome, not a reusable pattern)
+   - components.css  the iOS primitives (nav bar, grouped lists, fields,
+                  sheets…) as `@layer components`, so any Tailwind utility on
+                  the same element still wins
+
+   Pages compose those primitives and lay themselves out with utilities. */
+
+@import 'tailwindcss';
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/device.css';
+@import './styles/components.css';
+
+/* `dark:` follows the app's own toggle, not only the OS setting. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* `inline` makes each utility reference the variable itself (not a copy of
+   its value), so a theme switch re-colours every utility instantly. */
+@theme inline {
+  --color-stage: var(--stage);
+  --color-bg-grouped: var(--bg-grouped);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-card: var(--card);
+  --color-card-sunken: var(--card-sunken);
+  --color-chrome: var(--chrome);
+  --color-chrome-border: var(--chrome-border);
+  --color-label: var(--label);
+  --color-label-secondary: var(--label-secondary);
+  --color-label-tertiary: var(--label-tertiary);
+  --color-separator: var(--separator);
+  --color-fill: var(--fill);
+  --color-fill-strong: var(--fill-strong);
+  --color-accent: var(--accent);
+  --color-accent-tint: var(--accent-tint);
+
+  /* iOS system colours */
+  --color-blue: var(--blue);
+  --color-green: var(--green);
+  --color-red: var(--red);
+  --color-orange: var(--orange);
+  --color-yellow: var(--yellow);
+  --color-purple: var(--purple);
+  --color-pink: var(--pink);
+  --color-indigo: var(--indigo);
+  --color-teal: var(--teal);
+  --color-mint: var(--mint);
+  --color-brown: var(--brown);
+  --color-gray: var(--gray);
+}
+
+@theme {
+  /* Same stack as the midterm: SF Pro on Apple devices (it ships with the
+     OS — Apple's licence doesn't allow serving it as a web font), Segoe UI
+     Variable on Windows, Roboto on Android. */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI Variable Text', 'Segoe UI',
+    system-ui, Roboto, Helvetica, Arial, sans-serif;
+
+  --radius-card: 14px;
+  --radius-control: 11px;
+  --radius-pill: 999px;
+
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* iOS text styles as Tailwind sizes: `text-headline`, `text-footnote`… */
+  --text-large-title: 34px;
+  --text-large-title--line-height: 1.06;
+  --text-large-title--letter-spacing: -0.028em;
+  --text-title: 22px;
+  --text-title--line-height: 1.14;
+  --text-title--letter-spacing: -0.021em;
+  --text-headline: 17px;
+  --text-headline--line-height: 1.29;
+  --text-headline--letter-spacing: -0.011em;
+  --text-body: 17px;
+  --text-body--line-height: 1.35;
+  --text-body--letter-spacing: -0.011em;
+  --text-subhead: 15px;
+  --text-subhead--line-height: 1.33;
+  --text-subhead--letter-spacing: -0.006em;
+  --text-footnote: 13px;
+  --text-footnote--line-height: 1.38;
+  --text-caption: 12px;
+  --text-caption--line-height: 1.33;
+  --text-caption--letter-spacing: 0.006em;
+}

@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+
+# Builds
+dist
+dist-ssr
+
+# Environment — never commit real secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Claude Code tooling — not part of the app
+.claude/
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.sw?
