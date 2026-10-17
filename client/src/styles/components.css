@@ -1127,6 +1127,11 @@
     color: var(--red);
   }
 
+  .status-label[data-tone='yellow'] {
+    color: var(--yellow-text);
+    font-weight: 600;
+  }
+
   /* Neutral emphasis for a value that needs attention (e.g. a balance due):
      a filled highlight behind the figure, no colour. */
   .highlight {
