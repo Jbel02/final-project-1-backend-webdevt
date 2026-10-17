@@ -674,6 +674,11 @@
     display: flex;
     justify-content: flex-end;
     min-height: 24px;
+    /* Shrink to the value instead of stretching across the card, so the
+       native calendar opens right under the date (not mid-screen). */
+    flex: 0 0 auto;
+    width: auto;
+    margin-left: auto;
   }
 
   input[type='date'].field__control::-webkit-date-and-time-value {
@@ -882,6 +887,14 @@
     font-weight: 500;
     letter-spacing: -0.004em;
     white-space: nowrap;
+  }
+
+  .status-label[data-tone='green'] {
+    color: var(--green);
+  }
+
+  .status-label[data-tone='red'] {
+    color: var(--red);
   }
 
   /* Neutral emphasis for a value that needs attention (e.g. a balance due):
