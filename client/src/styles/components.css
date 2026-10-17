@@ -624,7 +624,9 @@
     padding: 8px 14px;
   }
 
-  .field + .field::before {
+  .field + .field::before,
+  .field + .date-panel::before,
+  .date-panel + .field::before {
     content: '';
     position: absolute;
     top: 0;
@@ -666,6 +668,234 @@
 
   .field__control:disabled {
     color: var(--label-secondary);
+  }
+
+
+  /* ===== iOS date row + inline calendar (Tablet / Phone previews) =====
+     Sized from the simulated screen (`@container viewport`), never from the
+     real window, so it follows the device preview. */
+  .date-pill {
+    margin-left: auto;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 9px;
+    background-color: var(--fill);
+    color: var(--label);
+    font-size: 16px;
+    letter-spacing: -0.008em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    transition:
+      color 160ms var(--ease-out),
+      transform var(--dur-fast) var(--ease-out);
+  }
+
+  .date-pill:active {
+    transform: scale(0.97);
+  }
+
+  .date-pill[aria-expanded='true'] {
+    color: var(--accent);
+  }
+
+  .date-pill__placeholder {
+    color: var(--label-tertiary);
+  }
+
+  .date-panel {
+    position: relative;
+    padding: 4px 14px 8px;
+    animation: calendar-in 200ms var(--ease-out);
+  }
+
+  @keyframes calendar-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .date-panel {
+      animation: none;
+    }
+  }
+
+  .calendar {
+    --cal-font: 17px;
+    width: 100%;
+    max-width: 420px;
+    margin-inline: auto;
+    font-size: var(--cal-font);
+  }
+
+  /* iPad: the calendar spans the card like iPadOS, with larger days. */
+  @container viewport (min-width: 700px) {
+    .calendar {
+      --cal-font: 20px;
+      max-width: none;
+    }
+
+    .calendar__day {
+      max-width: 60px;
+    }
+  }
+
+  .calendar__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 2px 10px;
+  }
+
+  .calendar__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    margin-left: -6px;
+    border: none;
+    background: none;
+    color: var(--label);
+    font-size: 1.06em;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .calendar__title-chevron {
+    width: 0.7em;
+    height: 0.7em;
+    color: var(--accent);
+    stroke-width: 2.6;
+    transition: transform 200ms var(--ease-out);
+  }
+
+  .calendar__title[aria-expanded='true'] .calendar__title-chevron {
+    transform: rotate(90deg);
+  }
+
+  .calendar__nav {
+    display: flex;
+    gap: 6px;
+  }
+
+  .calendar__arrow {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 36px;
+    border: none;
+    background: none;
+    color: var(--accent);
+  }
+
+  .calendar__arrow svg {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.6;
+  }
+
+  .calendar__arrow:disabled {
+    color: var(--label-tertiary);
+  }
+
+  .calendar__arrow:active:not(:disabled) {
+    opacity: 0.5;
+  }
+
+  .calendar__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 2px;
+    justify-items: center;
+  }
+
+  .calendar__weekday {
+    padding: 4px 0 8px;
+    color: var(--label-secondary);
+    font-size: 0.72em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .calendar__day {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    max-width: 52px;
+    aspect-ratio: 1;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--label);
+    font-size: 1.18em;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    transition: background-color 120ms var(--ease-out);
+  }
+
+  .calendar__day:active:not(:disabled) {
+    background-color: var(--fill-strong);
+  }
+
+  .calendar__day[aria-current='date'] {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .calendar__day[aria-pressed='true'] {
+    background-color: var(--accent);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .calendar__day:disabled {
+    color: var(--label-tertiary);
+  }
+
+  .calendar__months {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 4px 0 8px;
+  }
+
+  .calendar__month {
+    padding: 14px 0;
+    border: none;
+    border-radius: 12px;
+    background-color: var(--fill);
+    color: var(--label);
+    font-size: 1.05em;
+    font-weight: 500;
+  }
+
+  .calendar__month[aria-pressed='true'] {
+    background-color: var(--accent);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .calendar__month:disabled {
+    color: var(--label-tertiary);
+  }
+
+  .calendar__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 40px;
+    padding-top: 6px;
+  }
+
+  .calendar__action {
+    padding: 6px 4px;
+    border: none;
+    background: none;
+    color: var(--accent);
+    font-size: 0.94em;
+    font-weight: 500;
   }
 
   /* Date inputs: keep the native picker (it is the best one on every

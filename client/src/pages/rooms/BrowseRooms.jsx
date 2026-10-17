@@ -5,7 +5,8 @@ import { addDays, nightsBetween, todayDateOnly } from '@shared/dates.js'
 import { hasErrors, validateStayDates } from '@shared/validation.js'
 import { roomsApi } from '../../api'
 import EmptyState from '../../components/EmptyState'
-import Field, { FieldError } from '../../components/Field'
+import DateField from '../../components/DateField'
+import { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
 import Page from '../../components/Page'
 import RoomPhoto from '../../components/RoomPhoto'
@@ -76,26 +77,22 @@ export default function BrowseRooms() {
         <h2 className="t-section-header">Your Stay</h2>
         <div className="grid gap-3 @min-[700px]/viewport:grid-cols-2">
           <div className="card">
-            <Field id="checkIn" label="Check-in" invalid={Boolean(dateErrors.checkIn)}>
-              <input
-                id="checkIn"
-                className="field__control"
-                type="date"
-                min={today}
-                value={filters.checkIn}
-                onChange={(event) => setFilter('checkIn', event.target.value)}
-              />
-            </Field>
-            <Field id="checkOut" label="Check-out" invalid={Boolean(dateErrors.checkOut)}>
-              <input
-                id="checkOut"
-                className="field__control"
-                type="date"
-                min={filters.checkIn ? addDays(filters.checkIn, 1) : addDays(today, 1)}
-                value={filters.checkOut}
-                onChange={(event) => setFilter('checkOut', event.target.value)}
-              />
-            </Field>
+            <DateField
+              id="checkIn"
+              label="Check-in"
+              invalid={Boolean(dateErrors.checkIn)}
+              min={today}
+              value={filters.checkIn}
+              onChange={(value) => setFilter('checkIn', value)}
+            />
+            <DateField
+              id="checkOut"
+              label="Check-out"
+              invalid={Boolean(dateErrors.checkOut)}
+              min={filters.checkIn ? addDays(filters.checkIn, 1) : addDays(today, 1)}
+              value={filters.checkOut}
+              onChange={(value) => setFilter('checkOut', value)}
+            />
           </div>
 
           <div className="card">

@@ -48,6 +48,16 @@ const dayOnly = new Intl.DateTimeFormat('en-US', { day: 'numeric', timeZone: 'UT
 /** Accepts 'YYYY-MM-DD' or an ISO timestamp. */
 const asDate = (value) => new Date(value.length === 10 ? `${value}T00:00:00Z` : value)
 
+const pickerFormat = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+})
+
+/** "Oct 17, 2026" — the date shown in the iOS-style date pill. */
+export const formatPickerDate = (value) => pickerFormat.format(asDate(value))
+
 export const dateOnly = (value) => (value ? String(value).slice(0, 10) : '')
 export const formatDay = (value) => dayFormat.format(asDate(value))
 export const formatLongDate = (value) => longFormat.format(asDate(value))
