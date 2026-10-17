@@ -1,10 +1,10 @@
 import { STATUS_STYLES } from '../utils/format'
 
 /** Booking statuses that get a coloured label; everything else stays neutral. */
-const TONES = { confirmed: 'green', cancelled: 'red' }
+const TONES = { confirmed: 'green', completed: 'green', cancelled: 'red' }
 
 /**
- * Plain status label — no coloured pill, just coloured text for a confirmed
+ * Plain status label — no coloured pill, just coloured text for a confirmed or completed
  * (green) or cancelled (red) booking. Kept as a component so every screen
  * still reads its wording from STATUS_STYLES in one place.
  * @param {'booking'|'room'|'payment'|'role'|'account'} kind
