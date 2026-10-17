@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { todayDateOnly } from '@shared/dates.js'
 import { bookingsApi } from '../../api'
 import EmptyState from '../../components/EmptyState'
-import Field from '../../components/Field'
+import DateField from '../../components/DateField'
 import Page from '../../components/Page'
 import SearchField from '../../components/SearchField'
 import SegmentedControl from '../../components/SegmentedControl'
@@ -75,15 +75,7 @@ export default function FrontDesk() {
 
       <div className="group mb-4">
         <div className="card">
-          <Field id="date" label="Date">
-            <input
-              id="date"
-              className="field__control"
-              type="date"
-              value={date}
-              onChange={(event) => setFilter('date', event.target.value)}
-            />
-          </Field>
+          <DateField id="date" label="Date" value={date} onChange={(value) => setFilter('date', value)} clearable />
         </div>
         <div className="mt-2 flex gap-2">
           <button type="button" className="chip" aria-pressed={date === today} onClick={() => setFilter('date', today)}>

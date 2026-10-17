@@ -5,7 +5,8 @@ import { addDays, nightsBetween, todayDateOnly } from '@shared/dates.js'
 import { hasErrors, validateStayDates } from '@shared/validation.js'
 import { roomsApi } from '../../api'
 import EmptyState from '../../components/EmptyState'
-import Field, { FieldError } from '../../components/Field'
+import DateField from '../../components/DateField'
+import { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
 import Page from '../../components/Page'
 import RoomPhoto from '../../components/RoomPhoto'
@@ -13,7 +14,7 @@ import { LoadError } from '../../components/States'
 import Stepper from '../../components/Stepper'
 import { useApi } from '../../hooks/useApi'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
-import { ROOM_TYPE_COLORS, formatPeso, formatStay, plural } from '../../utils/format'
+import { ROOM_TYPE_ICONS, formatPeso, formatStay, plural } from '../../utils/format'
 
 /**
  * Room search for guests and visitors: date range, guest count (capacity),
@@ -76,26 +77,22 @@ export default function BrowseRooms() {
         <h2 className="t-section-header">Your Stay</h2>
         <div className="grid gap-3 @min-[700px]/viewport:grid-cols-2">
           <div className="card">
-            <Field id="checkIn" label="Check-in" invalid={Boolean(dateErrors.checkIn)}>
-              <input
-                id="checkIn"
-                className="field__control"
-                type="date"
-                min={today}
-                value={filters.checkIn}
-                onChange={(event) => setFilter('checkIn', event.target.value)}
-              />
-            </Field>
-            <Field id="checkOut" label="Check-out" invalid={Boolean(dateErrors.checkOut)}>
-              <input
-                id="checkOut"
-                className="field__control"
-                type="date"
-                min={filters.checkIn ? addDays(filters.checkIn, 1) : addDays(today, 1)}
-                value={filters.checkOut}
-                onChange={(event) => setFilter('checkOut', event.target.value)}
-              />
-            </Field>
+            <DateField
+              id="checkIn"
+              label="Check-in"
+              invalid={Boolean(dateErrors.checkIn)}
+              min={today}
+              value={filters.checkIn}
+              onChange={(value) => setFilter('checkIn', value)}
+            />
+            <DateField
+              id="checkOut"
+              label="Check-out"
+              invalid={Boolean(dateErrors.checkOut)}
+              min={filters.checkIn ? addDays(filters.checkIn, 1) : addDays(today, 1)}
+              value={filters.checkOut}
+              onChange={(value) => setFilter('checkOut', value)}
+            />
           </div>
 
           <div className="card">
@@ -155,7 +152,7 @@ export default function BrowseRooms() {
             aria-pressed={filters.type === type}
             onClick={() => setFilter('type', type)}
           >
-            {type && <span className="chip__dot" style={{ backgroundColor: ROOM_TYPE_COLORS[type] }} />}
+            {type && <Icon name={ROOM_TYPE_ICONS[type]} className="chip__icon" />}
             {type || 'All Types'}
           </button>
         ))}
@@ -219,9 +216,7 @@ function RoomCard({ room, nights, search }) {
       <span className="room-card__body">
         <span className="flex items-center justify-between gap-2">
           <span className="t-headline">Room {room.roomNumber}</span>
-          <span className="badge" style={{ '--badge': ROOM_TYPE_COLORS[room.type] }}>
-            {room.type}
-          </span>
+          <span className="status-label">{room.type}</span>
         </span>
         <span className="t-footnote t-secondary">
           Floor {room.floor} · Up to {plural(room.maxOccupancy, 'guest')}

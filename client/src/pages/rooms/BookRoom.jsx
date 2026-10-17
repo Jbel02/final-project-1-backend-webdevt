@@ -6,7 +6,8 @@ import { addDays, nightsBetween, todayDateOnly } from '@shared/dates.js'
 import { mealRate, quoteBooking } from '@shared/pricing.js'
 import { hasErrors, validateBooking, validateStayDates } from '@shared/validation.js'
 import { bookingsApi, roomsApi } from '../../api'
-import Field, { FieldError } from '../../components/Field'
+import DateField from '../../components/DateField'
+import { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
 import { CancelButton } from '../../components/NavButtons'
 import Page from '../../components/Page'
@@ -127,23 +128,24 @@ function BookingForm({ room }) {
         <div className="group">
           <h2 className="t-section-header">Stay</h2>
           <div className="card">
-            <Field id="checkIn" label="Check-in" invalid={Boolean(errors.checkIn)}>
-              <input
-                {...form.bind('checkIn')}
-                onChange={(event) => setCheckIn(event.target.value)}
-                className="field__control"
-                type="date"
-                min={today}
-              />
-            </Field>
-            <Field id="checkOut" label="Check-out" invalid={Boolean(errors.checkOut)}>
-              <input
-                {...form.bind('checkOut')}
-                className="field__control"
-                type="date"
-                min={values.checkIn ? addDays(values.checkIn, 1) : addDays(today, 1)}
-              />
-            </Field>
+            <DateField
+              id="checkIn"
+              label="Check-in"
+              invalid={Boolean(errors.checkIn)}
+              min={today}
+              value={values.checkIn}
+              onChange={setCheckIn}
+              onBlur={form.bind('checkIn').onBlur}
+            />
+            <DateField
+              id="checkOut"
+              label="Check-out"
+              invalid={Boolean(errors.checkOut)}
+              min={values.checkIn ? addDays(values.checkIn, 1) : addDays(today, 1)}
+              value={values.checkOut}
+              onChange={(value) => form.setField('checkOut', value)}
+              onBlur={form.bind('checkOut').onBlur}
+            />
             <div className={`field${errors.guests ? ' field--invalid' : ''}`}>
               <span className="field__label">Guests</span>
               <span className="flex flex-1 items-center justify-end gap-3">

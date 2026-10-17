@@ -43,6 +43,38 @@ const PATHS = {
     </>
   ),
 
+  // --- Room types (filter chips) ---
+  // Solid bed glyphs: a stroked headboard over a filled mattress with feet.
+  roomSingle: (
+    <>
+      <path d="M7.4 11V7.4a2.4 2.4 0 0 1 2.4-2.4h4.4a2.4 2.4 0 0 1 2.4 2.4V11" strokeWidth="2.2" />
+      <rect x="4.4" y="10" width="15.2" height="7" rx="2.6" fill="currentColor" stroke="none" />
+      <rect x="4.9" y="15" width="2.6" height="4.6" rx="1.3" fill="currentColor" stroke="none" />
+      <rect x="16.5" y="15" width="2.6" height="4.6" rx="1.3" fill="currentColor" stroke="none" />
+    </>
+  ),
+  roomDouble: (
+    <>
+      <path d="M3.9 11V8.1A2.1 2.1 0 0 1 6 6h12a2.1 2.1 0 0 1 2.1 2.1V11" strokeWidth="2.2" />
+      <rect x="6.6" y="8.4" width="4.6" height="3.2" rx="1.1" fill="currentColor" stroke="none" />
+      <rect x="12.8" y="8.4" width="4.6" height="3.2" rx="1.1" fill="currentColor" stroke="none" />
+      <rect x="2.4" y="10.8" width="19.2" height="6.4" rx="2.4" fill="currentColor" stroke="none" />
+      <rect x="2.9" y="15.2" width="2.6" height="4.4" rx="1.3" fill="currentColor" stroke="none" />
+      <rect x="18.5" y="15.2" width="2.6" height="4.4" rx="1.3" fill="currentColor" stroke="none" />
+    </>
+  ),
+  roomKing: (
+    <>
+      <path d="M4 17.5 3 8l5 4 4-6 4 6 5-4-1 9.5Z" />
+      <path d="M5 20.5h14" />
+    </>
+  ),
+  roomSuite: (
+    <>
+      <path d="M12 3.6 14.3 9l5.7.5-4.3 3.8 1.3 5.7L12 16l-5 3 1.3-5.7L4 9.5 9.7 9 12 3.6Z" />
+    </>
+  ),
+
   // --- Hotel ---
   bed: (
     <>
