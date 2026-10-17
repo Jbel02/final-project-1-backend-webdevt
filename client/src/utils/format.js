@@ -103,9 +103,10 @@ export const STATUS_STYLES = {
   },
 }
 
-export const ROOM_TYPE_COLORS = {
-  Single: 'var(--teal)',
-  Double: 'var(--blue)',
-  King: 'var(--purple)',
-  Suite: 'var(--orange)',
+/** Icon name (see Icon.jsx) for each room type, used by the type filter chips. */
+export const ROOM_TYPE_ICONS = {
+  Single: 'roomSingle',
+  Double: 'roomDouble',
+  King: 'roomKing',
+  Suite: 'roomSuite',
 }

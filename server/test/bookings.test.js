@@ -127,6 +127,22 @@ describe('the stay lifecycle', () => {
     expect(status).toBe(409)
     expect(body.message).toMatch(/Check-in opens that day/)
   })
+
+  it('refuses to check out a confirmed booking', async () => {
+    const desk = await signIn('receptionist')
+    const confirmed = await Booking.findOne({ 'roomSnapshot.roomNumber': '506' })
+    const { status, body } = await desk.patch(`/api/bookings/${confirmed.id}/checkout`)
+    expect(status).toBe(409)
+    expect(body.message).toBe('Only a checked-in guest can be checked out.')
+  })
+
+  it('refuses to check in a completed booking', async () => {
+    const desk = await signIn('receptionist')
+    const completed = await Booking.findOne({ 'roomSnapshot.roomNumber': '305' })
+    const { status, body } = await desk.patch(`/api/bookings/${completed.id}/checkin`)
+    expect(status).toBe(409)
+    expect(body.message).toBe('This booking is completed, so it can’t be checked in.')
+  })
 })
 
 describe('cancelling', () => {

@@ -175,7 +175,7 @@ function BookingView({ booking, user, isStaff, isWorking, onCheckIn, onRequestCh
           <InfoRow label="Total">{formatPeso(booking.totalAmount)}</InfoRow>
           <InfoRow label="Paid">{formatPeso(booking.paidAmount)}</InfoRow>
           <InfoRow label="Balance">
-            <span className={booking.balance > 0 ? 'font-semibold text-orange' : undefined}>
+            <span className={booking.balance > 0 ? 'highlight' : undefined}>
               {formatPeso(booking.balance)}
             </span>
           </InfoRow>

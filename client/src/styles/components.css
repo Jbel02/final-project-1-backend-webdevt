@@ -518,17 +518,13 @@
   }
 
   /* ===== Filter chips ===== */
+  /* Chips wrap onto extra lines instead of scrolling sideways, so every
+     option is visible and left-aligned at any frame width. */
   .chip-scroller {
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
-    margin: 0 -16px 16px;
-    padding: 0 16px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .chip-scroller::-webkit-scrollbar {
-    display: none;
+    margin: 0 0 16px;
   }
 
   .chip {
@@ -559,10 +555,10 @@
     color: #fff;
   }
 
-  .chip__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+  .chip__icon {
+    width: 16px;
+    height: 16px;
+    flex: none;
   }
 
   /* ===== Page scrollbar + back to top (Tablet/Phone frames) ===== */
@@ -878,23 +874,24 @@
     letter-spacing: -0.03em;
   }
 
-  /* ===== Badge =====
-     Tinted pill. The colour comes from `--badge` (set inline), so one class
-     covers every status: green for available/confirmed, orange for
-     maintenance/partial, and so on. */
-  .badge {
-    --badge: var(--gray);
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 9px;
-    border-radius: var(--radius-pill);
-    background-color: color-mix(in srgb, var(--badge) 16%, transparent);
-    color: var(--badge);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
+  /* ===== Status label =====
+     Plain text instead of a coloured pill. */
+  .status-label {
+    color: var(--label-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.004em;
     white-space: nowrap;
+  }
+
+  /* Neutral emphasis for a value that needs attention (e.g. a balance due):
+     a filled highlight behind the figure, no colour. */
+  .highlight {
+    padding: 2px 10px;
+    border-radius: 8px;
+    background-color: var(--fill-strong);
+    color: var(--label);
+    font-weight: 700;
   }
 
   /* ===== Empty state ===== */

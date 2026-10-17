@@ -10,7 +10,7 @@ import { LoadError, LoadingRows } from '../../components/States'
 import StatusBadge from '../../components/StatusBadge'
 import { useAuth } from '../../context/AuthContext'
 import { useApi } from '../../hooks/useApi'
-import { ROOM_TYPE_COLORS, formatPeso, formatStay, plural } from '../../utils/format'
+import { formatPeso, formatStay, plural } from '../../utils/format'
 
 /**
  * One room — photo and details, public. If the guest arrived from a dated
@@ -77,9 +77,7 @@ export default function RoomDetail() {
             <h2 className="t-section-header">Details</h2>
             <div className="card">
               <DetailRow label="Type">
-                <span className="badge" style={{ '--badge': ROOM_TYPE_COLORS[room.type] }}>
-                  {room.type}
-                </span>
+                {room.type}
               </DetailRow>
               <DetailRow label="Floor">{room.floor}</DetailRow>
               <DetailRow label="Max Occupancy">{plural(room.maxOccupancy, 'guest')}</DetailRow>

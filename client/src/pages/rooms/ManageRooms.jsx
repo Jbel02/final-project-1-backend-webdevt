@@ -11,7 +11,7 @@ import SegmentedControl from '../../components/SegmentedControl'
 import { LoadError, LoadingRows } from '../../components/States'
 import StatusBadge from '../../components/StatusBadge'
 import { useApi } from '../../hooks/useApi'
-import { ROOM_TYPE_COLORS, formatPeso, plural } from '../../utils/format'
+import { ROOM_TYPE_ICONS, formatPeso, plural } from '../../utils/format'
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All' },
@@ -70,7 +70,7 @@ export default function ManageRooms() {
             aria-pressed={type === option}
             onClick={() => setType(option)}
           >
-            {option && <span className="chip__dot" style={{ backgroundColor: ROOM_TYPE_COLORS[option] }} />}
+            {option && <Icon name={ROOM_TYPE_ICONS[option]} className="chip__icon" />}
             {option || 'All Types'}
           </button>
         ))}
