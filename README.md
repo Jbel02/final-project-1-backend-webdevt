@@ -13,6 +13,13 @@ the Desktop / iPad / iPhone preview frame.
 > **Proposal tracking:** every item of `final-project-proposal-G1.pdf`, every gap we found, every
 > default we chose and every addition is listed in [`docs/CHECKLIST.md`](docs/CHECKLIST.md).
 
+## Screenshots
+
+![Browse rooms](docs/screenshots/rooms.png)
+![Book a room](docs/screenshots/book-room.png)
+![My bookings](docs/screenshots/my-bookings.png)
+![Dark mode](docs/screenshots/rooms-dark.png)
+
 ---
 
 ## Quick start
