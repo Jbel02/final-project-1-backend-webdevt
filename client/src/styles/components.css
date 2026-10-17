@@ -585,7 +585,8 @@
   .back-to-top {
     position: absolute;
     right: 16px;
-    bottom: calc(var(--safe-bottom) + 65px);
+    /* Clears the tab bar (56px + safe area) with a small gap. */
+    bottom: calc(var(--safe-bottom) + 68px);
     display: grid;
     place-items: center;
     width: 34px;
@@ -609,9 +610,14 @@
     background-color: var(--fill);
   }
 
-  .device-frame[data-device='desktop'] .back-to-top {
-    bottom: 35px;
-    right: 17px;
+  /* Keyed to the *layout*, not the device: the tab bar is shown below 900px
+     even in the Desktop preview (a narrow browser window), and the button
+     has to clear it there. Only the wide sidebar layout has no tab bar. */
+  @container viewport (min-width: 900px) {
+    .back-to-top {
+      bottom: 35px;
+      right: 17px;
+    }
   }
 
   /* ===== Forms ===== */
