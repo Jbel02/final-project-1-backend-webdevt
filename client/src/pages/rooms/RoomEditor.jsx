@@ -32,6 +32,8 @@ const FLOOR_OPTIONS = Array.from({ length: TOTAL_FLOORS }, (_, index) => ({
   label: `Floor ${index + 1}`,
 }))
 
+const TYPE_OPTIONS = ROOM_TYPES.map((type) => ({ value: type, label: type }))
+
 const STATUS_OPTIONS = [
   { value: 'available', label: 'Available' },
   { value: 'maintenance', label: 'Maintenance' },
@@ -141,15 +143,16 @@ function RoomForm({ initial, roomId }) {
               onChange={(floor) => setField('floor', floor)}
               onBlur={form.bind('floor').onBlur}
             />
-            <Field id="type" label="Type" invalid={Boolean(errors.type)}>
-              <select {...form.bind('type')} onChange={(event) => setType(event.target.value)} className="field__control">
-                {ROOM_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </Field>
+            <PickerField
+              id="type"
+              label="Type"
+              title="Room Type"
+              invalid={Boolean(errors.type)}
+              value={values.type}
+              options={TYPE_OPTIONS}
+              onChange={setType}
+              onBlur={form.bind('type').onBlur}
+            />
           </div>
           {groupErrors(['roomNumber', 'floor', 'type'])}
         </div>
