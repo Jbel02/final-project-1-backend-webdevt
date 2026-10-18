@@ -10,6 +10,7 @@ import Field, { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
 import { CancelButton } from '../../components/NavButtons'
 import Page from '../../components/Page'
+import PickerField from '../../components/PickerField'
 import RoomPhoto from '../../components/RoomPhoto'
 import SegmentedControl from '../../components/SegmentedControl'
 import { LoadError, LoadingRows } from '../../components/States'
@@ -25,6 +26,11 @@ const NEW_ROOM = {
   photoUrl: '',
   status: 'available',
 }
+
+const FLOOR_OPTIONS = Array.from({ length: TOTAL_FLOORS }, (_, index) => ({
+  value: index + 1,
+  label: `Floor ${index + 1}`,
+}))
 
 const STATUS_OPTIONS = [
   { value: 'available', label: 'Available' },
@@ -125,15 +131,16 @@ function RoomForm({ initial, roomId }) {
             <Field id="roomNumber" label="Room Number" invalid={Boolean(errors.roomNumber)}>
               <input {...form.bind('roomNumber')} className="field__control" inputMode="numeric" placeholder="e.g. 305" />
             </Field>
-            <Field id="floor" label="Floor" invalid={Boolean(errors.floor)}>
-              <select {...form.bind('floor')} className="field__control">
-                {Array.from({ length: TOTAL_FLOORS }, (_, index) => (
-                  <option key={index + 1} value={index + 1}>
-                    Floor {index + 1}
-                  </option>
-                ))}
-              </select>
-            </Field>
+            <PickerField
+              id="floor"
+              label="Floor"
+              title="Select Floor"
+              invalid={Boolean(errors.floor)}
+              value={values.floor}
+              options={FLOOR_OPTIONS}
+              onChange={(floor) => setField('floor', floor)}
+              onBlur={form.bind('floor').onBlur}
+            />
             <Field id="type" label="Type" invalid={Boolean(errors.type)}>
               <select {...form.bind('type')} onChange={(event) => setType(event.target.value)} className="field__control">
                 {ROOM_TYPES.map((type) => (
