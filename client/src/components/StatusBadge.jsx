@@ -2,7 +2,7 @@ import { STATUS_STYLES } from '../utils/format'
 
 /** Booking statuses that get a coloured label; everything else stays neutral. */
 const TONES = {
-  booking: { confirmed: 'green', completed: 'green', cancelled: 'red' },
+  booking: { confirmed: 'green', completed: 'green', 'checked-in': 'blue', cancelled: 'red' },
   room: { maintenance: 'yellow' },
 }
 
