@@ -1129,6 +1129,10 @@
     color: var(--green);
   }
 
+  .status-label[data-tone='blue'] {
+    color: #0a84ff;
+  }
+
   .status-label[data-tone='red'] {
     color: var(--red);
   }
