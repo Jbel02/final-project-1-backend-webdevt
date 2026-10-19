@@ -75,7 +75,14 @@ export default function FrontDesk() {
 
       <div className="group mb-4">
         <div className="card">
-          <DateField id="date" label="Date" value={date} onChange={(value) => setFilter('date', value)} clearable />
+          <DateField
+            id="date"
+            label="Date"
+            value={date}
+            onChange={(value) => setFilter('date', value)}
+            clearable
+            strongPlaceholder
+          />
         </div>
         <div className="mt-2 flex gap-2">
           <button type="button" className="chip" aria-pressed={date === today} onClick={() => setFilter('date', today)}>
