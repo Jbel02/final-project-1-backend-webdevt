@@ -79,6 +79,7 @@ export default function BrowseRooms() {
           <div className="card">
             <DateField
               id="checkIn"
+              strongPlaceholder
               label="Check-in"
               invalid={Boolean(dateErrors.checkIn)}
               min={today}
@@ -87,6 +88,7 @@ export default function BrowseRooms() {
             />
             <DateField
               id="checkOut"
+              strongPlaceholder
               label="Check-out"
               invalid={Boolean(dateErrors.checkOut)}
               min={filters.checkIn ? addDays(filters.checkIn, 1) : addDays(today, 1)}

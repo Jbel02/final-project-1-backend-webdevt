@@ -130,6 +130,7 @@ function BookingForm({ room }) {
           <div className="card">
             <DateField
               id="checkIn"
+              strongPlaceholder
               label="Check-in"
               invalid={Boolean(errors.checkIn)}
               min={today}
@@ -139,6 +140,7 @@ function BookingForm({ room }) {
             />
             <DateField
               id="checkOut"
+              strongPlaceholder
               label="Check-out"
               invalid={Boolean(errors.checkOut)}
               min={values.checkIn ? addDays(values.checkIn, 1) : addDays(today, 1)}

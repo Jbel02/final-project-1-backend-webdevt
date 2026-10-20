@@ -52,18 +52,6 @@ export default function BookingDetail() {
     <Page
       title="Booking"
       leading={<BackButton fallback="/bookings" />}
-      trailing={
-        booking ? (
-          <button
-            type="button"
-            className="bar-button bar-button--floating"
-            aria-label="Print Receipt"
-            onClick={() => window.print()}
-          >
-            <Icon name="printer" />
-          </button>
-        ) : null
-      }
     >
       {error ? (
         <LoadError error={error} onRetry={reload} />

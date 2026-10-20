@@ -33,6 +33,9 @@ const monthOf = (dateOnly) => {
  * @param {string} [min]        earliest selectable date
  * @param {string} [max]        latest selectable date
  * @param {boolean} [clearable] show a Clear action (optional dates)
+ * @param {boolean} [strongPlaceholder] draw the empty "Select" text in the
+ *   primary label colour (black in light mode) instead of the faint tertiary
+ *   grey. Touch layouts only; the Desktop native input is unaffected.
  */
 export default function DateField({
   id,
@@ -44,6 +47,7 @@ export default function DateField({
   max,
   invalid = false,
   clearable = false,
+  strongPlaceholder = false,
 }) {
   const { device } = useDevice()
 
@@ -66,12 +70,23 @@ export default function DateField({
 
   return (
     <TouchDateField
-      {...{ id, label, value, onChange, onBlur, min, max, invalid, clearable }}
+      {...{ id, label, value, onChange, onBlur, min, max, invalid, clearable, strongPlaceholder }}
     />
   )
 }
 
-function TouchDateField({ id, label, value, onChange, onBlur, min, max, invalid, clearable }) {
+function TouchDateField({
+  id,
+  label,
+  value,
+  onChange,
+  onBlur,
+  min,
+  max,
+  invalid,
+  clearable,
+  strongPlaceholder,
+}) {
   const panelId = useId()
   const today = todayDateOnly()
   const [isOpen, setIsOpen] = useState(false)
@@ -118,7 +133,7 @@ function TouchDateField({ id, label, value, onChange, onBlur, min, max, invalid,
         <button
           id={id}
           type="button"
-          className="date-pill"
+          className={`date-pill${strongPlaceholder ? ' date-pill--strong' : ''}`}
           aria-expanded={isOpen}
           aria-controls={panelId}
           onClick={() => (isOpen ? close() : open())}

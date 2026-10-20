@@ -708,6 +708,13 @@
     color: var(--label-tertiary);
   }
 
+  /* Rooms check-in / check-out: an empty "Select" must be easy to read.
+     --label is black in light mode and white in dark mode, so it stays
+     visible on the pill in both themes. */
+  .date-pill--strong .date-pill__placeholder {
+    color: var(--label);
+  }
+
   .date-panel {
     position: relative;
     padding: 4px 14px 8px;
