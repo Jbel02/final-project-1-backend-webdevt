@@ -13,6 +13,7 @@ import RoomPhoto from '../../components/RoomPhoto'
 import { LoadError } from '../../components/States'
 import Stepper from '../../components/Stepper'
 import { useApi } from '../../hooks/useApi'
+import { useDevice } from '../../context/DeviceContext'
 import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import { ROOM_TYPE_ICONS, formatPeso, formatStay, plural } from '../../utils/format'
 
@@ -24,6 +25,7 @@ import { ROOM_TYPE_ICONS, formatPeso, formatStay, plural } from '../../utils/for
  */
 export default function BrowseRooms() {
   const [params, setParams] = useSearchParams()
+  const { device } = useDevice()
   const today = todayDateOnly()
 
   const filters = {
@@ -75,7 +77,13 @@ export default function BrowseRooms() {
     <Page title="Rooms" wide>
       <div className="group">
         <h2 className="t-section-header">Your Stay</h2>
-        <div className="grid gap-3 @min-[700px]/viewport:grid-cols-2">
+        <div
+          className={
+            device === 'tablet'
+              ? 'grid gap-3'
+              : 'grid gap-3 @min-[700px]/viewport:grid-cols-2'
+          }
+        >
           <div className="card">
             <DateField
               id="checkIn"
