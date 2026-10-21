@@ -31,7 +31,9 @@ export default function SignIn() {
     form.submit(async (values) => {
       setIsLeaving(true)
       const signedIn = await signIn(values)
-      toast.success(`Welcome back, ${firstName(signedIn.name)}`)
+      const greetingName =
+        signedIn.role === 'receptionist' ? 'Receptionist' : firstName(signedIn.name)
+      toast.success(`Welcome back, ${greetingName}`)
       navigate(next ?? homePathFor(signedIn), { replace: true })
     })
   }
