@@ -40,7 +40,7 @@
     flex: 1 1 auto;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: calc(var(--safe-top) + 52px) 16px calc(var(--safe-bottom) + 78px);
+    padding: calc(var(--safe-top) + 46px) 16px calc(var(--safe-bottom) + 72px);
     scrollbar-width: thin;
   }
 
