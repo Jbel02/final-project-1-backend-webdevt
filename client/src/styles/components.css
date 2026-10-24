@@ -585,7 +585,7 @@
   .back-to-top {
     position: absolute;
     right: 16px;
-    /* Clears the tab bar (46px + safe area) with a small gap. */
+    /* Clears the tab bar (38px + safe area) with a small gap. */
     bottom: calc(var(--safe-bottom) + 50px);
     display: grid;
     place-items: center;
@@ -724,7 +724,7 @@
   @keyframes calendar-in {
     from {
       opacity: 0;
-      transform: translateY(-6px);
+      transform: translateY(-2px);
     }
   }
 
