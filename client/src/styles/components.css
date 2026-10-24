@@ -78,7 +78,7 @@
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 8px;
-    height: calc(var(--safe-top) + 52px);
+    height: calc(var(--safe-top) + 46px);
     padding: var(--safe-top) 12px 0;
     background-color: var(--chrome);
     backdrop-filter: blur(24px) saturate(180%);
@@ -178,8 +178,8 @@
     z-index: 45;
     display: flex;
     align-items: flex-start;
-    height: calc(var(--safe-bottom) + 56px);
-    padding: 6px 8px var(--safe-bottom);
+    height: calc(var(--safe-bottom) + 50px);
+    padding: 4px 8px var(--safe-bottom);
     background-color: var(--chrome);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -194,8 +194,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 3px;
-    padding: 2px 0 4px;
+    gap: 2px;
+    padding: 1px 0 2px;
     border: none;
     background: transparent;
     color: var(--label-secondary);
@@ -214,8 +214,8 @@
   }
 
   .tab-bar__item svg {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 
   .tab-bar__label {
@@ -564,8 +564,8 @@
   /* ===== Page scrollbar + back to top (Tablet/Phone frames) ===== */
   .page-scrollbar {
     position: absolute;
-    top: calc(var(--safe-top) + 56px);
-    bottom: calc(var(--safe-bottom) + 82px);
+    top: calc(var(--safe-top) + 50px);
+    bottom: calc(var(--safe-bottom) + 76px);
     right: 3px;
     width: 3px;
     border-radius: var(--radius-pill);
@@ -586,7 +586,7 @@
     position: absolute;
     right: 16px;
     /* Clears the tab bar (56px + safe area) with a small gap. */
-    bottom: calc(var(--safe-bottom) + 68px);
+    bottom: calc(var(--safe-bottom) + 62px);
     display: grid;
     place-items: center;
     width: 34px;
