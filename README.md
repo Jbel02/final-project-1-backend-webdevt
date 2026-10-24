@@ -12,6 +12,15 @@ the Desktop / iPad / iPhone preview frame.
 
 > **Proposal tracking:** every item of `final-project-proposal-G1.pdf`, every gap we found, every
 > default we chose and every addition is listed in [`docs/CHECKLIST.md`](docs/CHECKLIST.md).
+## Team
+
+| Member | Owns |
+| --- | --- |
+| Maliñana, Johnbel | Manager screens (rooms, users), server and database setup, Atlas, Render and Vercel deployment |
+| Cortez, Cedric | Guest flow (browse, book, my bookings), shared UI components, screenshots |
+| Elpedes, Dustin | Front desk (bookings, check-in/out), server tests, receipt printing |
+
+Work is done on branches and merged through reviewed pull requests.
 
 ## Screenshots
 
