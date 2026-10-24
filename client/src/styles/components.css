@@ -40,7 +40,7 @@
     flex: 1 1 auto;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding: calc(var(--safe-top) + 46px) 16px calc(var(--safe-bottom) + 72px);
+    padding: calc(var(--safe-top) + 34px) 16px calc(var(--safe-bottom) + 60px);
     scrollbar-width: thin;
   }
 
@@ -78,7 +78,7 @@
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 8px;
-    height: calc(var(--safe-top) + 46px);
+    height: calc(var(--safe-top) + 36px);
     padding: var(--safe-top) 12px 0;
     background-color: var(--chrome);
     backdrop-filter: blur(24px) saturate(180%);
@@ -178,7 +178,7 @@
     z-index: 45;
     display: flex;
     align-items: flex-start;
-    height: calc(var(--safe-bottom) + 50px);
+    height: calc(var(--safe-bottom) + 38px);
     padding: 4px 8px var(--safe-bottom);
     background-color: var(--chrome);
     backdrop-filter: blur(24px) saturate(180%);
@@ -564,8 +564,8 @@
   /* ===== Page scrollbar + back to top (Tablet/Phone frames) ===== */
   .page-scrollbar {
     position: absolute;
-    top: calc(var(--safe-top) + 50px);
-    bottom: calc(var(--safe-bottom) + 76px);
+    top: calc(var(--safe-top) + 38px);
+    bottom: calc(var(--safe-bottom) + 64px);
     right: 3px;
     width: 3px;
     border-radius: var(--radius-pill);
@@ -585,8 +585,8 @@
   .back-to-top {
     position: absolute;
     right: 16px;
-    /* Clears the tab bar (56px + safe area) with a small gap. */
-    bottom: calc(var(--safe-bottom) + 62px);
+    /* Clears the tab bar (46px + safe area) with a small gap. */
+    bottom: calc(var(--safe-bottom) + 50px);
     display: grid;
     place-items: center;
     width: 34px;
