@@ -342,7 +342,7 @@
   }
 
   /* Device-specific chrome: keep the compact phone layout unchanged. */
-  .device-frame[data-device='phone'] .nav-bar__side--trailing {
+  .device-frame[data-device='phone'] .nav-bar__side {
     transform: translateY(-8px);
   }
 
