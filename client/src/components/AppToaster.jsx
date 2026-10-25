@@ -7,11 +7,11 @@ import { useDevice } from '../context/DeviceContext'
  *
  * Passed as a prop rather than set in CSS because Sonner writes
  * `--offset-bottom` as an *inline* style, which no stylesheet rule can beat.
- * The values clear each device's tab bar: 34px of bar plus that device's
+ * The values clear each device's tab bar (34px on phone, 40px on tablet) plus its
  * home-indicator inset (34 on phone, 18 on tablet), plus breathing room.
  * Desktop shows a sidebar instead of a tab bar, so it only needs a margin.
  */
-const BOTTOM_OFFSET = { desktop: 24, tablet: 80, phone: 96 }
+const BOTTOM_OFFSET = { desktop: 24, tablet: 86, phone: 96 }
 
 /**
  * Sonner, wired into the app's theme and its device frame.
