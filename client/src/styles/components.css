@@ -1982,23 +1982,37 @@
 }
 
 /* Desktop notifications fit their message instead of stretching to Sonner's
-   fixed 356px. The toaster keeps a 420px ceiling (so long text wraps rather
-   than growing), and the bar is centred inside it, which is itself centred in
-   the browser window. The iPad / iPhone banner toaster is excluded. */
-.stage[data-device='desktop'] .viewport [data-sonner-toaster]:not(.banner-toaster) {
-  --width: min(420px, calc(100cqw - 32px)) !important;
+   fixed 356px, and are centred on the browser window itself.
+
+   The toaster is reduced to a zero-width anchor sitting exactly on the
+   window's centre line (`left: 50%` of a `position: fixed` box is half the
+   window, sidebar included). Each toast then centres *itself* on that line.
+   Nothing depends on how wide Sonner makes its wrapper, on the page content,
+   or on the sidebar — so the bar cannot end up left or right of centre.
+   The iPad / iPhone banner toaster is excluded. */
+.stage[data-device='desktop'] .viewport [data-sonner-toast][data-styled='true'] {
+  padding: 12px 18px;
 }
 
-.stage[data-device='desktop']
-  .viewport
-  [data-sonner-toaster]:not(.banner-toaster)
-  [data-sonner-toast][data-styled='true'] {
-  width: max-content;
-  max-width: 100%;
-  /* Centre within the toaster. `translate` is its own property, so it does not
-     fight the `transform` Sonner animates for the slide-in. */
-  left: 50%;
-  right: auto;
-  translate: -50% 0;
-  padding: 12px 18px;
+@media (min-width: 601px) {
+  .stage[data-device='desktop'] .viewport [data-sonner-toaster]:not(.banner-toaster) {
+    left: 50%;
+    right: auto;
+    width: 0;
+    transform: none;
+  }
+
+  .stage[data-device='desktop']
+    .viewport
+    [data-sonner-toaster]:not(.banner-toaster)
+    [data-sonner-toast][data-styled='true'] {
+    left: 0;
+    right: auto;
+    width: max-content;
+    /* Long text wraps at 420px (or the window minus a margin) instead of growing. */
+    max-width: min(420px, calc(100vw - 32px));
+    /* `translate` is its own property, so it does not fight the `transform`
+       Sonner animates for the slide-in. */
+    translate: -50% 0;
+  }
 }
