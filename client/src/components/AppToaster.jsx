@@ -24,12 +24,18 @@ const BOTTOM_OFFSET = { desktop: 24, tablet: 86, phone: 96, touchWindow: 80 }
  * switches to its tab bar below 900px, even in the Desktop preview), or a
  * real touch device — which covers an iPad turned to landscape, where the
  * screen is wide but is still an iPad.
+ *
+ * "Touch device" means a coarse pointer *and no hover*. A laptop with a touch
+ * screen has a coarse pointer too, but it also hovers, and it is a desktop:
+ * it must keep the desktop toast.
  */
+const TOUCH_DEVICE_QUERY = '(pointer: coarse) and (hover: none)'
+
 function useTouchLayout() {
   const { device } = useDevice()
   const [isNarrow, setIsNarrow] = useState(false)
   const [isCoarse, setIsCoarse] = useState(
-    () => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches,
+    () => typeof matchMedia === 'function' && matchMedia(TOUCH_DEVICE_QUERY).matches,
   )
 
   useEffect(() => {
@@ -43,7 +49,7 @@ function useTouchLayout() {
   }, [])
 
   useEffect(() => {
-    const query = matchMedia('(pointer: coarse)')
+    const query = matchMedia(TOUCH_DEVICE_QUERY)
     const update = () => setIsCoarse(query.matches)
     query.addEventListener('change', update)
     return () => query.removeEventListener('change', update)

@@ -14,11 +14,13 @@ import AuthBanner from '../components/AuthBanner'
  * AppToaster tells this module which layout is current; it can't be read here
  * because this is plain code outside the React tree.
  *
- * All auth notices share one id, so a new one *replaces* the one on screen
- * instead of stacking — e.g. two requests failing with 401 at once still
- * produce a single "You’ve been signed out".
+ * Only one auth notice is ever on screen: showing a new one first dismisses the
+ * previous, so e.g. two requests failing with 401 at once still produce a
+ * single "You’ve been signed out". Each notice gets a fresh id rather than
+ * reusing one — re-using an id after Sonner has removed a toast is a known
+ * way for a later notification to silently not show.
  */
-const NOTICE_ID = 'auth-notice'
+let currentNotice = null
 export const BANNER_TOASTER_ID = 'auth-banner'
 const BANNER_DURATION = 4000
 
@@ -39,16 +41,22 @@ export function setAuthNoticeStyle(isBanner) {
  *   is an extra line only the roomier iOS banner shows.
  */
 export function notifyAuth(title, { description, bannerDescription, tone = 'success' } = {}) {
+  if (currentNotice !== null) toast.dismiss(currentNotice)
+  currentNotice = show(title, { description, bannerDescription, tone })
+  return currentNotice
+}
+
+function show(title, { description, bannerDescription, tone }) {
   if (useBanner) {
     return toast.custom(
       (id) => (
         <AuthBanner id={id} title={title} description={description ?? bannerDescription} tone={tone} />
       ),
-      { id: NOTICE_ID, toasterId: BANNER_TOASTER_ID, duration: BANNER_DURATION },
+      { toasterId: BANNER_TOASTER_ID, duration: BANNER_DURATION },
     )
   }
 
-  const options = { id: NOTICE_ID, description }
+  const options = { description }
   if (tone === 'error') return toast.error(title, options)
   if (tone === 'neutral') return toast(title, options)
   return toast.success(title, options)

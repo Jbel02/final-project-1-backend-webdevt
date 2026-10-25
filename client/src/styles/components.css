@@ -342,10 +342,6 @@
   }
 
   /* Device-specific chrome: keep the compact phone layout unchanged. */
-  .device-frame[data-device='phone'] .nav-bar__side {
-    transform: translateY(-8px);
-  }
-
   .device-frame[data-device='tablet'] .nav-bar,
   .device-frame[data-device='desktop'] .nav-bar {
     height: calc(var(--safe-top) + 34px);
@@ -1943,7 +1939,16 @@
    screen instead — the iPad / iPhone screen, not the window around it. */
 .viewport [data-sonner-toaster] {
   position: absolute;
-  z-index: 80;
+  /* Above every sheet, dialog and bar — a notification must never be covered.
+     (Sonner's own default is far higher; 80 let anything above it hide one.) */
+  z-index: 2000;
+}
+
+/* Desktop preview has no device frame: the window *is* the screen. Anchor to
+   the window itself so the toast is centred in the browser viewport however
+   the page behind it is sized or scrolled. */
+.stage[data-device='desktop'] .viewport [data-sonner-toaster] {
+  position: fixed;
 }
 
 /* Centre on the screen itself — the whole browser viewport on desktop,
@@ -1966,7 +1971,7 @@
     420px,
     calc(100cqw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))
   ) !important;
-  z-index: 85;
+  z-index: 2001;
 }
 
 /* A notch on one side only makes the free area off-centre; follow it. */
