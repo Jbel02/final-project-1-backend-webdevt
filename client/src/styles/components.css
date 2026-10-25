@@ -341,6 +341,56 @@
     }
   }
 
+  /* Device-specific chrome: keep the compact phone layout unchanged. */
+  .device-frame[data-device='tablet'] .nav-bar,
+  .device-frame[data-device='desktop'] .nav-bar {
+    height: calc(var(--safe-top) + 34px);
+  }
+
+  .device-frame[data-device='tablet'] .nav-bar__title,
+  .device-frame[data-device='desktop'] .nav-bar__title {
+    transform: none;
+  }
+
+  @container viewport (max-width: 899px) {
+    .device-frame[data-device='tablet'] .page__scroll,
+    .device-frame[data-device='desktop'] .page__scroll {
+      padding-top: calc(var(--safe-top) + 34px);
+    }
+
+    .device-frame[data-device='tablet'] .page-scrollbar,
+    .device-frame[data-device='desktop'] .page-scrollbar {
+      top: calc(var(--safe-top) + 36px);
+    }
+
+    .device-frame[data-device='tablet'] .tab-bar {
+      height: calc(var(--safe-bottom) + 40px);
+      padding: 1px 8px var(--safe-bottom);
+    }
+
+    /* Keep the icon and label above the home-indicator area. */
+    .device-frame[data-device='tablet'] .tab-bar__item {
+      gap: 1px;
+      padding: 0;
+    }
+
+    .device-frame[data-device='tablet'] .tab-bar__label {
+      line-height: 12px;
+    }
+
+    .device-frame[data-device='tablet'] .page__scroll {
+      padding-bottom: calc(var(--safe-bottom) + 62px);
+    }
+
+    .device-frame[data-device='tablet'] .page-scrollbar {
+      bottom: calc(var(--safe-bottom) + 66px);
+    }
+
+    .device-frame[data-device='tablet'] .back-to-top {
+      bottom: calc(var(--safe-bottom) + 52px);
+    }
+  }
+
   /* ===== Grouped lists / cards ===== */
   .group {
     margin-bottom: 26px;
