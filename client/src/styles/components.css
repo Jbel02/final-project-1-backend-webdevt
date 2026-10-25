@@ -1951,10 +1951,10 @@
   position: fixed;
 }
 
-/* Centre on the screen itself — the whole browser viewport on desktop,
-   sidebar included — not on whatever content sits beside the sidebar.
-   Sonner does this too; it is pinned here so it cannot drift. (Below 600px
-   Sonner's own full-width mobile layout takes over.) */
+/* Default (non-desktop-preview) centring on the screen itself; the desktop
+   preview refines this below to the main content area. Sonner does this too;
+   it is pinned here so it cannot drift. (Below 600px Sonner's own full-width
+   mobile layout takes over.) */
 @media (min-width: 601px) {
   .viewport [data-sonner-toaster][data-x-position='center'] {
     left: 50%;
@@ -1982,21 +1982,21 @@
 }
 
 /* Desktop notifications fit their message instead of stretching to Sonner's
-   fixed 356px, and are centred on the browser window itself.
+   fixed 356px, and are centred in the main content area — the page beside the
+   sidebar — not across the whole window.
 
-   The toaster is reduced to a zero-width anchor sitting exactly on the
-   window's centre line (`left: 50%` of a `position: fixed` box is half the
-   window, sidebar included). Each toast then centres *itself* on that line.
-   Nothing depends on how wide Sonner makes its wrapper, on the page content,
-   or on the sidebar — so the bar cannot end up left or right of centre.
-   The iPad / iPhone banner toaster is excluded. */
+   The toaster is reduced to a zero-width anchor placed on the content area's
+   centre line (`--toast-center-x`, measured from the real page host by
+   AppToaster, so it follows the sidebar and the window size). Each toast then
+   centres *itself* on that line, so nothing depends on how wide Sonner makes
+   its wrapper. The iPad / iPhone banner toaster is excluded. */
 .stage[data-device='desktop'] .viewport [data-sonner-toast][data-styled='true'] {
   padding: 12px 18px;
 }
 
 @media (min-width: 601px) {
   .stage[data-device='desktop'] .viewport [data-sonner-toaster]:not(.banner-toaster) {
-    left: 50%;
+    left: var(--toast-center-x, 50%);
     right: auto;
     width: 0;
     transform: none;
@@ -2009,8 +2009,8 @@
     left: 0;
     right: auto;
     width: max-content;
-    /* Long text wraps at 420px (or the window minus a margin) instead of growing. */
-    max-width: min(420px, calc(100vw - 32px));
+    /* Long text wraps at 420px (or the content area minus a margin) instead of growing. */
+    max-width: min(420px, calc(var(--toast-area-w, 100vw) - 32px));
     /* `translate` is its own property, so it does not fight the `transform`
        Sonner animates for the slide-in. */
     translate: -50% 0;

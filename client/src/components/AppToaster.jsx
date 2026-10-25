@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 import { useTheme } from '../context/ThemeContext'
+import { useAuth } from '../context/AuthContext'
 import { useDevice } from '../context/DeviceContext'
 import { BANNER_TOASTER_ID, setAuthNoticeStyle } from '../utils/notify'
 
@@ -59,6 +60,49 @@ function useTouchLayout() {
 }
 
 /**
+ * Keeps `--toast-center-x` / `--toast-area-w` on the screen element equal to the
+ * centre and width of the *main content area* — the page host beside the
+ * sidebar — measured from the real layout rather than assumed from a sidebar
+ * width. With no sidebar (a narrow window) the host is the whole screen, so the
+ * centre is the screen's. styles/components.css uses these to place the
+ * desktop toast; nothing else reads them.
+ *
+ * The page host only exists once the session check is done, hence `isReady`.
+ * A ResizeObserver on it catches both window resizes and sidebar changes.
+ */
+function useMainAreaCenter() {
+  const { isReady } = useAuth()
+
+  useEffect(() => {
+    const screen = document.querySelector('.viewport')
+    const host = screen?.querySelector('.page-host')
+    if (!screen || !host) return undefined
+
+    const update = () => {
+      const screenBox = screen.getBoundingClientRect()
+      const hostBox = host.getBoundingClientRect()
+      // The preview frame can be scaled; express the numbers in the screen's own pixels.
+      const scale = screenBox.width / screen.offsetWidth || 1
+      screen.style.setProperty(
+        '--toast-center-x',
+        `${(hostBox.left - screenBox.left + hostBox.width / 2) / scale}px`,
+      )
+      screen.style.setProperty('--toast-area-w', `${hostBox.width / scale}px`)
+    }
+
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(host)
+    observer.observe(screen)
+    return () => {
+      observer.disconnect()
+      screen.style.removeProperty('--toast-center-x')
+      screen.style.removeProperty('--toast-area-w')
+    }
+  }, [isReady])
+}
+
+/**
  * Sonner, wired into the app's theme and its device frame.
  *
  * Two toasters share the screen:
@@ -86,6 +130,7 @@ function useTouchLayout() {
 export default function AppToaster() {
   const { theme } = useTheme()
   const { device, isTouchLayout } = useTouchLayout()
+  useMainAreaCenter()
 
   // Before paint, so a notification fired right after a route change already
   // knows which layout to use.
