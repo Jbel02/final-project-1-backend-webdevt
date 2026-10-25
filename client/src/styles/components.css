@@ -1980,3 +1980,25 @@
     margin-left: calc((env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 2);
   }
 }
+
+/* Desktop notifications fit their message instead of stretching to Sonner's
+   fixed 356px. The toaster keeps a 420px ceiling (so long text wraps rather
+   than growing), and the bar is centred inside it, which is itself centred in
+   the browser window. The iPad / iPhone banner toaster is excluded. */
+.stage[data-device='desktop'] .viewport [data-sonner-toaster]:not(.banner-toaster) {
+  --width: min(420px, calc(100cqw - 32px)) !important;
+}
+
+.stage[data-device='desktop']
+  .viewport
+  [data-sonner-toaster]:not(.banner-toaster)
+  [data-sonner-toast][data-styled='true'] {
+  width: max-content;
+  max-width: 100%;
+  /* Centre within the toaster. `translate` is its own property, so it does not
+     fight the `transform` Sonner animates for the slide-in. */
+  left: 50%;
+  right: auto;
+  translate: -50% 0;
+  padding: 12px 18px;
+}
