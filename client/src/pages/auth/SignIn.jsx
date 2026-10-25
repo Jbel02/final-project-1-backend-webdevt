@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
-import { toast } from 'sonner'
 import { validateLogin } from '@shared/validation.js'
 import Field, { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
@@ -9,9 +8,14 @@ import Page from '../../components/Page'
 import { useAuth } from '../../context/AuthContext'
 import { homePathFor } from '../../data/navItems'
 import { useForm } from '../../hooks/useForm'
+import { notifyAuth } from '../../utils/notify'
 import { safeNext } from '../../utils/safeNext'
 
 const firstName = (name) => name.split(' ')[0]
+
+/** Staff are greeted by role (their names are "Hotel Manager", "Front Desk"); guests by first name. */
+const ROLE_GREETING = { receptionist: 'Receptionist', manager: 'Manager' }
+const greetingName = (user) => ROLE_GREETING[user.role] ?? firstName(user.name)
 
 export default function SignIn() {
   const { user, signIn } = useAuth()
@@ -31,9 +35,9 @@ export default function SignIn() {
     form.submit(async (values) => {
       setIsLeaving(true)
       const signedIn = await signIn(values)
-      const greetingName =
-        signedIn.role === 'receptionist' ? 'Receptionist' : firstName(signedIn.name)
-      toast.success(`Welcome back, ${greetingName}`)
+      notifyAuth(`Welcome back, ${greetingName(signedIn)}`, {
+        bannerDescription: 'You’re signed in to SuiteSpot.',
+      })
       navigate(next ?? homePathFor(signedIn), { replace: true })
     })
   }

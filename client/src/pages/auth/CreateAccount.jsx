@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
-import { toast } from 'sonner'
 import { validateRegistration } from '@shared/validation.js'
 import Field, { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
@@ -9,6 +8,7 @@ import Page from '../../components/Page'
 import { useAuth } from '../../context/AuthContext'
 import { homePathFor } from '../../data/navItems'
 import { useForm } from '../../hooks/useForm'
+import { notifyAuth } from '../../utils/notify'
 import { safeNext } from '../../utils/safeNext'
 
 /** Guest self-registration. Staff accounts are made by the manager instead. */
@@ -32,7 +32,7 @@ export default function CreateAccount() {
     form.submit(async (values) => {
       setIsLeaving(true)
       const created = await signUp(values)
-      toast.success('Account created', { description: `You’re signed in as ${created.email}.` })
+      notifyAuth('Account created', { description: `You’re signed in as ${created.email}.` })
       navigate(next ?? homePathFor(created), { replace: true })
     })
   }

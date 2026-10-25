@@ -12,6 +12,7 @@ import StatusBadge from '../components/StatusBadge'
 import ThemeToggle from '../components/ThemeToggle'
 import { useAuth } from '../context/AuthContext'
 import { useForm } from '../hooks/useForm'
+import { notifyAuth } from '../utils/notify'
 
 const FIELDS = [
   { name: 'name', label: 'Name', autoComplete: 'name' },
@@ -48,7 +49,10 @@ function ProfileView({ onEdit }) {
   const handleSignOut = async () => {
     navigate('/rooms', { replace: true })
     await signOut()
-    toast('Signed out')
+    notifyAuth('Signed out', {
+      bannerDescription: 'You’ve been signed out of SuiteSpot.',
+      tone: 'neutral',
+    })
   }
 
   return (

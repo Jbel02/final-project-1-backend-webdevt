@@ -1731,15 +1731,11 @@
   }
 
   /* ===== Toasts (Sonner) =====
-     Mounted inside `.viewport`, whose container-type makes it the containing
-     block for Sonner's `position: fixed` — so toasts anchor to the simulated
-     screen. The bottom offset is a prop (see AppToaster), not CSS. */
-  [data-sonner-toaster] {
-    z-index: 80;
-    --width: min(360px, calc(100cqw - 32px));
-  }
-
+     Mounted inside `.viewport` and made `position: absolute` below, so toasts
+     anchor to the simulated screen. The bottom offset is a prop (see
+     AppToaster), not CSS. */
   .viewport [data-sonner-toaster][data-sonner-theme] {
+    --width: min(360px, calc(100cqw - 32px));
     --normal-bg: var(--bg-elevated);
     --normal-text: var(--label);
     --normal-border: var(--chrome-border);
@@ -1797,6 +1793,103 @@
   .toast--success .toast__title {
     color: var(--green);
   }
+
+  /* ===== Notification banner (iOS-style) =====
+     Sign-in / sign-out messages on iPad and iPhone layouts. They hang from the
+     top of the screen just below the status bar (--safe-top), at most 420px
+     wide and centred, and keep clear of a notch in either orientation. */
+  /* Sonner leaves an unstyled toast as wide as its text; a banner is always the toaster's width. */
+  .banner-toaster [data-sonner-toast] {
+    width: 100%;
+  }
+
+  .auth-banner {
+    width: 100%;
+    border-radius: 22px;
+    background-color: color-mix(in srgb, var(--bg-elevated) 93%, transparent);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    box-shadow:
+      0 0 0 0.5px var(--separator),
+      0 1px 2px rgba(0, 0, 0, 0.12),
+      0 14px 36px rgba(0, 0, 0, 0.26);
+    font-family: inherit;
+    touch-action: pan-x;
+  }
+
+  .auth-banner__body {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border: none;
+    border-radius: inherit;
+    background: none;
+    color: var(--label);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .auth-banner__icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background-color: var(--accent);
+    color: #fff;
+  }
+
+  .auth-banner--error .auth-banner__icon {
+    background-color: var(--red);
+  }
+
+  .auth-banner__icon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .auth-banner__text {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .auth-banner__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--label-secondary);
+    font-size: 13px;
+    line-height: 1.3;
+  }
+
+  .auth-banner__title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .auth-banner__description {
+    color: var(--label-secondary);
+    font-size: 15px;
+    letter-spacing: -0.012em;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .banner-toaster [data-sonner-toast] {
+      transition: opacity 150ms linear !important;
+    }
+  }
 }
 
 @keyframes skeleton-shimmer {
@@ -1836,5 +1929,49 @@
     color: #000;
     font-family: var(--font-sans);
     font-size: 12pt;
+  }
+}
+
+/* ===== Sonner: layout overrides =====
+   Deliberately *outside* `@layer components`. Sonner injects its CSS
+   unlayered, and unlayered rules beat layered ones whatever their
+   specificity — so anything that has to change how Sonner lays itself out
+   must live here. (Colours and type stay in the layer, on our own classes.) */
+
+/* Sonner positions its toaster `fixed`, which anchors to the browser window.
+   `.viewport` is `position: relative`, so `absolute` anchors to the simulated
+   screen instead — the iPad / iPhone screen, not the window around it. */
+.viewport [data-sonner-toaster] {
+  position: absolute;
+  z-index: 80;
+}
+
+/* Centre on the screen itself — the whole browser viewport on desktop,
+   sidebar included — not on whatever content sits beside the sidebar.
+   Sonner does this too; it is pinned here so it cannot drift. (Below 600px
+   Sonner's own full-width mobile layout takes over.) */
+@media (min-width: 601px) {
+  .viewport [data-sonner-toaster][data-x-position='center'] {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+
+/* iOS banners: at most 420px, never wider than the screen minus its margins
+   and any notch, and above ordinary toasts. Sonner writes `--width` as an
+   inline style, so only `!important` can override it. */
+.viewport .banner-toaster[data-sonner-toaster] {
+  --width: min(
+    420px,
+    calc(100cqw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))
+  ) !important;
+  z-index: 85;
+}
+
+/* A notch on one side only makes the free area off-centre; follow it. */
+@media (min-width: 601px) {
+  .viewport .banner-toaster[data-sonner-toaster] {
+    margin-left: calc((env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 2);
   }
 }
