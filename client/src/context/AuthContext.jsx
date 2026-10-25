@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { toast } from 'sonner'
 import { authApi } from '../api'
 import { setUnauthorizedHandler } from '../api/client'
+import { notifyAuth } from '../utils/notify'
 
 /**
  * Who is signed in, app-wide. The proposal's "Context API (auth state)":
@@ -42,7 +42,10 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     setUnauthorizedHandler(() => {
       if (!userRef.current) return
-      toast.error('You’ve been signed out', { description: 'Sign in again to continue.' })
+      notifyAuth('You’ve been signed out', {
+        description: 'Sign in again to continue.',
+        tone: 'error',
+      })
       setUser(null)
     })
     return () => setUnauthorizedHandler(null)
@@ -61,6 +64,9 @@ export function AuthProvider({ children }) {
   }, [])
 
   const signOut = useCallback(async () => {
+    // Deliberate sign-out: a request still in flight that now comes back 401
+    // must not add a second, "session ended" notification on top of it.
+    userRef.current = null
     try {
       await authApi.logout()
     } finally {
