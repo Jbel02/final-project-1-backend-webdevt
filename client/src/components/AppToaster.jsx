@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 import { useTheme } from '../context/ThemeContext'
+import { useAuth } from '../context/AuthContext'
 import { useDevice } from '../context/DeviceContext'
 import { BANNER_TOASTER_ID, setAuthNoticeStyle } from '../utils/notify'
 
@@ -24,12 +25,18 @@ const BOTTOM_OFFSET = { desktop: 24, tablet: 86, phone: 96, touchWindow: 80 }
  * switches to its tab bar below 900px, even in the Desktop preview), or a
  * real touch device — which covers an iPad turned to landscape, where the
  * screen is wide but is still an iPad.
+ *
+ * "Touch device" means a coarse pointer *and no hover*. A laptop with a touch
+ * screen has a coarse pointer too, but it also hovers, and it is a desktop:
+ * it must keep the desktop toast.
  */
+const TOUCH_DEVICE_QUERY = '(pointer: coarse) and (hover: none)'
+
 function useTouchLayout() {
   const { device } = useDevice()
   const [isNarrow, setIsNarrow] = useState(false)
   const [isCoarse, setIsCoarse] = useState(
-    () => typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches,
+    () => typeof matchMedia === 'function' && matchMedia(TOUCH_DEVICE_QUERY).matches,
   )
 
   useEffect(() => {
@@ -43,13 +50,81 @@ function useTouchLayout() {
   }, [])
 
   useEffect(() => {
-    const query = matchMedia('(pointer: coarse)')
+    const query = matchMedia(TOUCH_DEVICE_QUERY)
     const update = () => setIsCoarse(query.matches)
     query.addEventListener('change', update)
     return () => query.removeEventListener('change', update)
   }, [])
 
   return { device, isTouchLayout: device !== 'desktop' || isNarrow || isCoarse }
+}
+
+/**
+ * Keeps `--toast-center-x` / `--toast-area-w` on the screen element pointing at
+ * where the desktop toast should be centred. styles/components.css uses them to
+ * place it; nothing else reads them.
+ *
+ * Where it goes is measured from the real layout, never assumed from a sidebar
+ * width:
+ *
+ *  - on a page with a room grid (the Rooms page) — the centre of that grid.
+ *    With three columns that is the midpoint of the middle room card, so the
+ *    toast sits over the middle card's photo; with one column, over the card;
+ *  - everywhere else — the centre of the main content area beside the sidebar
+ *    (the whole screen when there is no sidebar).
+ *
+ * A page marks the element to follow with `data-toast-anchor`. Pages come and
+ * go and the grid appears only once rooms have loaded, so the page host is
+ * watched for changes and the target is re-picked when it changes. The page
+ * host itself only exists after the session check, hence `isReady`.
+ */
+function useToastAnchor() {
+  const { isReady } = useAuth()
+
+  useEffect(() => {
+    const screen = document.querySelector('.viewport')
+    const host = screen?.querySelector('.page-host')
+    if (!screen || !host) return undefined
+
+    const pick = () => host.querySelector('[data-toast-anchor]') ?? host
+    let target = pick()
+
+    const update = () => {
+      const screenBox = screen.getBoundingClientRect()
+      const targetBox = target.getBoundingClientRect()
+      // The preview frame can be scaled; express the numbers in the screen's own pixels.
+      const scale = screenBox.width / screen.offsetWidth || 1
+      screen.style.setProperty(
+        '--toast-center-x',
+        `${(targetBox.left - screenBox.left + targetBox.width / 2) / scale}px`,
+      )
+      screen.style.setProperty('--toast-area-w', `${host.getBoundingClientRect().width / scale}px`)
+    }
+
+    const resizeObserver = new ResizeObserver(update)
+    const watch = () => {
+      resizeObserver.disconnect()
+      target = pick()
+      resizeObserver.observe(screen)
+      resizeObserver.observe(host)
+      resizeObserver.observe(target)
+      update()
+    }
+    watch()
+
+    // Re-pick when a page is swapped or its room grid appears / disappears.
+    const mutationObserver = new MutationObserver(() => {
+      if (pick() !== target) watch()
+    })
+    mutationObserver.observe(host, { childList: true, subtree: true })
+
+    return () => {
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
+      screen.style.removeProperty('--toast-center-x')
+      screen.style.removeProperty('--toast-area-w')
+    }
+  }, [isReady])
 }
 
 /**
@@ -80,6 +155,7 @@ function useTouchLayout() {
 export default function AppToaster() {
   const { theme } = useTheme()
   const { device, isTouchLayout } = useTouchLayout()
+  useToastAnchor()
 
   // Before paint, so a notification fired right after a route change already
   // knows which layout to use.

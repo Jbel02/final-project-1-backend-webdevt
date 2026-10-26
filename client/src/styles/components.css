@@ -342,10 +342,6 @@
   }
 
   /* Device-specific chrome: keep the compact phone layout unchanged. */
-  .device-frame[data-device='phone'] .nav-bar__side {
-    transform: translateY(-8px);
-  }
-
   .device-frame[data-device='tablet'] .nav-bar,
   .device-frame[data-device='desktop'] .nav-bar {
     height: calc(var(--safe-top) + 34px);
@@ -1943,13 +1939,22 @@
    screen instead — the iPad / iPhone screen, not the window around it. */
 .viewport [data-sonner-toaster] {
   position: absolute;
-  z-index: 80;
+  /* Above every sheet, dialog and bar — a notification must never be covered.
+     (Sonner's own default is far higher; 80 let anything above it hide one.) */
+  z-index: 2000;
 }
 
-/* Centre on the screen itself — the whole browser viewport on desktop,
-   sidebar included — not on whatever content sits beside the sidebar.
-   Sonner does this too; it is pinned here so it cannot drift. (Below 600px
-   Sonner's own full-width mobile layout takes over.) */
+/* Desktop preview has no device frame: the window *is* the screen. Anchor to
+   the window itself so the toast is centred in the browser viewport however
+   the page behind it is sized or scrolled. */
+.stage[data-device='desktop'] .viewport [data-sonner-toaster] {
+  position: fixed;
+}
+
+/* Default (non-desktop-preview) centring on the screen itself; the desktop
+   preview refines this below to the main content area. Sonner does this too;
+   it is pinned here so it cannot drift. (Below 600px Sonner's own full-width
+   mobile layout takes over.) */
 @media (min-width: 601px) {
   .viewport [data-sonner-toaster][data-x-position='center'] {
     left: 50%;
@@ -1966,12 +1971,49 @@
     420px,
     calc(100cqw - 24px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))
   ) !important;
-  z-index: 85;
+  z-index: 2001;
 }
 
 /* A notch on one side only makes the free area off-centre; follow it. */
 @media (min-width: 601px) {
   .viewport .banner-toaster[data-sonner-toaster] {
     margin-left: calc((env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 2);
+  }
+}
+
+/* Desktop notifications fit their message instead of stretching to Sonner's
+   fixed 356px, and are centred on the page's own content — over the middle
+   room card on the Rooms page, or in the content area beside the sidebar
+   elsewhere — not across the whole window.
+
+   The toaster is reduced to a zero-width anchor placed on that centre line
+   (`--toast-center-x`, measured from the real layout by AppToaster, so it
+   follows the sidebar, the room grid and the window size). Each toast then
+   centres *itself* on that line, so nothing depends on how wide Sonner makes
+   its wrapper. The iPad / iPhone banner toaster is excluded. */
+.stage[data-device='desktop'] .viewport [data-sonner-toast][data-styled='true'] {
+  padding: 12px 18px;
+}
+
+@media (min-width: 601px) {
+  .stage[data-device='desktop'] .viewport [data-sonner-toaster]:not(.banner-toaster) {
+    left: var(--toast-center-x, 50%);
+    right: auto;
+    width: 0;
+    transform: none;
+  }
+
+  .stage[data-device='desktop']
+    .viewport
+    [data-sonner-toaster]:not(.banner-toaster)
+    [data-sonner-toast][data-styled='true'] {
+    left: 0;
+    right: auto;
+    width: max-content;
+    /* Long text wraps at 420px (or the content area minus a margin) instead of growing. */
+    max-width: min(420px, calc(var(--toast-area-w, 100vw) - 32px));
+    /* `translate` is its own property, so it does not fight the `transform`
+       Sonner animates for the slide-in. */
+    translate: -50% 0;
   }
 }

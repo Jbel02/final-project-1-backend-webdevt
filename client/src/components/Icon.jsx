@@ -45,20 +45,23 @@ const PATHS = {
   ),
 
   // --- Room types (filter chips) ---
-  // Room-type glyphs share the same outlined weight as the rest of the app.
+  // Solid bed glyphs: a stroked headboard over a filled mattress with feet.
   roomSingle: (
     <>
-      <path d="M5 19V9.5M19 19v-5.5a2.5 2.5 0 0 0-2.5-2.5H5" />
-      <path d="M5 15h14M5 18h14M7 18v2M17 18v2" />
-      <rect x="7.5" y="7.5" width="6" height="3.5" rx="1.2" />
+      <path d="M7.4 11V7.4a2.4 2.4 0 0 1 2.4-2.4h4.4a2.4 2.4 0 0 1 2.4 2.4V11" strokeWidth="2.2" />
+      <rect x="4.4" y="10" width="15.2" height="7" rx="2.6" fill="currentColor" stroke="none" />
+      <rect x="4.9" y="15" width="2.6" height="4.6" rx="1.3" fill="currentColor" stroke="none" />
+      <rect x="16.5" y="15" width="2.6" height="4.6" rx="1.3" fill="currentColor" stroke="none" />
     </>
   ),
   roomDouble: (
     <>
-      <path d="M3 19V9.5M21 19v-5.5a2.5 2.5 0 0 0-2.5-2.5H3" />
-      <path d="M3 15h18M3 18h18M5 18v2M19 18v2" />
-      <rect x="5.5" y="7.5" width="5.5" height="3.5" rx="1.2" />
-      <rect x="13" y="7.5" width="5.5" height="3.5" rx="1.2" />
+      <path d="M3.9 11V8.1A2.1 2.1 0 0 1 6 6h12a2.1 2.1 0 0 1 2.1 2.1V11" strokeWidth="2.2" />
+      <rect x="6.6" y="8.4" width="4.6" height="3.2" rx="1.1" fill="currentColor" stroke="none" />
+      <rect x="12.8" y="8.4" width="4.6" height="3.2" rx="1.1" fill="currentColor" stroke="none" />
+      <rect x="2.4" y="10.8" width="19.2" height="6.4" rx="2.4" fill="currentColor" stroke="none" />
+      <rect x="2.9" y="15.2" width="2.6" height="4.4" rx="1.3" fill="currentColor" stroke="none" />
+      <rect x="18.5" y="15.2" width="2.6" height="4.4" rx="1.3" fill="currentColor" stroke="none" />
     </>
   ),
   roomKing: (
