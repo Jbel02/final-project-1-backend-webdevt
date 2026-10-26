@@ -60,17 +60,25 @@ function useTouchLayout() {
 }
 
 /**
- * Keeps `--toast-center-x` / `--toast-area-w` on the screen element equal to the
- * centre and width of the *main content area* — the page host beside the
- * sidebar — measured from the real layout rather than assumed from a sidebar
- * width. With no sidebar (a narrow window) the host is the whole screen, so the
- * centre is the screen's. styles/components.css uses these to place the
- * desktop toast; nothing else reads them.
+ * Keeps `--toast-center-x` / `--toast-area-w` on the screen element pointing at
+ * where the desktop toast should be centred. styles/components.css uses them to
+ * place it; nothing else reads them.
  *
- * The page host only exists once the session check is done, hence `isReady`.
- * A ResizeObserver on it catches both window resizes and sidebar changes.
+ * Where it goes is measured from the real layout, never assumed from a sidebar
+ * width:
+ *
+ *  - on a page with a room grid (the Rooms page) — the centre of that grid.
+ *    With three columns that is the midpoint of the middle room card, so the
+ *    toast sits over the middle card's photo; with one column, over the card;
+ *  - everywhere else — the centre of the main content area beside the sidebar
+ *    (the whole screen when there is no sidebar).
+ *
+ * A page marks the element to follow with `data-toast-anchor`. Pages come and
+ * go and the grid appears only once rooms have loaded, so the page host is
+ * watched for changes and the target is re-picked when it changes. The page
+ * host itself only exists after the session check, hence `isReady`.
  */
-function useMainAreaCenter() {
+function useToastAnchor() {
   const { isReady } = useAuth()
 
   useEffect(() => {
@@ -78,24 +86,41 @@ function useMainAreaCenter() {
     const host = screen?.querySelector('.page-host')
     if (!screen || !host) return undefined
 
+    const pick = () => host.querySelector('[data-toast-anchor]') ?? host
+    let target = pick()
+
     const update = () => {
       const screenBox = screen.getBoundingClientRect()
-      const hostBox = host.getBoundingClientRect()
+      const targetBox = target.getBoundingClientRect()
       // The preview frame can be scaled; express the numbers in the screen's own pixels.
       const scale = screenBox.width / screen.offsetWidth || 1
       screen.style.setProperty(
         '--toast-center-x',
-        `${(hostBox.left - screenBox.left + hostBox.width / 2) / scale}px`,
+        `${(targetBox.left - screenBox.left + targetBox.width / 2) / scale}px`,
       )
-      screen.style.setProperty('--toast-area-w', `${hostBox.width / scale}px`)
+      screen.style.setProperty('--toast-area-w', `${host.getBoundingClientRect().width / scale}px`)
     }
 
-    update()
-    const observer = new ResizeObserver(update)
-    observer.observe(host)
-    observer.observe(screen)
+    const resizeObserver = new ResizeObserver(update)
+    const watch = () => {
+      resizeObserver.disconnect()
+      target = pick()
+      resizeObserver.observe(screen)
+      resizeObserver.observe(host)
+      resizeObserver.observe(target)
+      update()
+    }
+    watch()
+
+    // Re-pick when a page is swapped or its room grid appears / disappears.
+    const mutationObserver = new MutationObserver(() => {
+      if (pick() !== target) watch()
+    })
+    mutationObserver.observe(host, { childList: true, subtree: true })
+
     return () => {
-      observer.disconnect()
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
       screen.style.removeProperty('--toast-center-x')
       screen.style.removeProperty('--toast-area-w')
     }
@@ -130,7 +155,7 @@ function useMainAreaCenter() {
 export default function AppToaster() {
   const { theme } = useTheme()
   const { device, isTouchLayout } = useTouchLayout()
-  useMainAreaCenter()
+  useToastAnchor()
 
   // Before paint, so a notification fired right after a route change already
   // knows which layout to use.

@@ -1982,12 +1982,13 @@
 }
 
 /* Desktop notifications fit their message instead of stretching to Sonner's
-   fixed 356px, and are centred in the main content area — the page beside the
-   sidebar — not across the whole window.
+   fixed 356px, and are centred on the page's own content — over the middle
+   room card on the Rooms page, or in the content area beside the sidebar
+   elsewhere — not across the whole window.
 
-   The toaster is reduced to a zero-width anchor placed on the content area's
-   centre line (`--toast-center-x`, measured from the real page host by
-   AppToaster, so it follows the sidebar and the window size). Each toast then
+   The toaster is reduced to a zero-width anchor placed on that centre line
+   (`--toast-center-x`, measured from the real layout by AppToaster, so it
+   follows the sidebar, the room grid and the window size). Each toast then
    centres *itself* on that line, so nothing depends on how wide Sonner makes
    its wrapper. The iPad / iPhone banner toaster is excluded. */
 .stage[data-device='desktop'] .viewport [data-sonner-toast][data-styled='true'] {

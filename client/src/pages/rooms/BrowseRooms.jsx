@@ -207,6 +207,7 @@ export default function BrowseRooms() {
         <ul
           className="grid gap-4 @min-[560px]/viewport:grid-cols-2 @min-[1100px]/viewport:grid-cols-3"
           data-stale={isLoading}
+          data-toast-anchor
         >
           {rooms.map((room) => (
             <li key={room.id}>
@@ -249,7 +250,12 @@ function RoomCard({ room, nights, search }) {
 
 function RoomGridSkeleton() {
   return (
-    <div className="grid gap-4 @min-[560px]/viewport:grid-cols-2 @min-[1100px]/viewport:grid-cols-3" aria-busy="true" aria-label="Loading rooms">
+    <div
+      className="grid gap-4 @min-[560px]/viewport:grid-cols-2 @min-[1100px]/viewport:grid-cols-3"
+      aria-busy="true"
+      aria-label="Loading rooms"
+      data-toast-anchor
+    >
       {Array.from({ length: 6 }, (_, index) => (
         <div key={index} className="room-card">
           <span className="skeleton room-card__photo rounded-none" />
