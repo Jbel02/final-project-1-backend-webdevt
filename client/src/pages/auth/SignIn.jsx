@@ -5,6 +5,7 @@ import Field, { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
 import { CancelButton } from '../../components/NavButtons'
 import Page from '../../components/Page'
+import PasswordInput from '../../components/PasswordInput'
 import { useAuth } from '../../context/AuthContext'
 import { homePathFor } from '../../data/navItems'
 import { useForm } from '../../hooks/useForm'
@@ -67,10 +68,8 @@ export default function SignIn() {
                 />
               </Field>
               <Field id="password" label="Password" invalid={Boolean(form.errors.password)}>
-                <input
+                <PasswordInput
                   {...form.bind('password')}
-                  className="field__control"
-                  type="password"
                   autoComplete="current-password"
                   placeholder="Required"
                 />
