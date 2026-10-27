@@ -77,14 +77,10 @@ export default function SignIn() {
             </div>
             {form.errors.email && <FieldError>{form.errors.email}</FieldError>}
             {form.errors.password && <FieldError>{form.errors.password}</FieldError>}
+            {form.formError && !form.errors.email && !form.errors.password && (
+              <FieldError>{form.formError}</FieldError>
+            )}
           </div>
-
-          {form.formError && !form.errors.email && !form.errors.password && (
-            <p className="notice notice--warning mb-4" role="alert">
-              <Icon name="warning" />
-              {form.formError}
-            </p>
-          )}
 
           <button type="submit" className="button" disabled={form.isSubmitting}>
             {form.isSubmitting ? 'Signing In…' : 'Sign In'}
