@@ -119,6 +119,7 @@
     align-items: center;
     gap: 2px;
     min-width: 0;
+    transform: translateY(-8px);
   }
 
   .nav-bar__side--trailing {
@@ -348,7 +349,9 @@
   }
 
   .device-frame[data-device='tablet'] .nav-bar__title,
-  .device-frame[data-device='desktop'] .nav-bar__title {
+  .device-frame[data-device='desktop'] .nav-bar__title,
+  .device-frame[data-device='tablet'] .nav-bar__side,
+  .device-frame[data-device='desktop'] .nav-bar__side {
     transform: none;
   }
 
