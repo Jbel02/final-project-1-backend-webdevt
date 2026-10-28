@@ -177,8 +177,7 @@ export default function BrowseRooms() {
       </div>
 
       {!datesValid && !error && (
-        <p className="notice mb-4">
-          <Icon name="calendar" />
+        <p className="inline-note mb-4 pt-0">
           Choose check-in and check-out dates to see which rooms are free for your stay.
         </p>
       )}
