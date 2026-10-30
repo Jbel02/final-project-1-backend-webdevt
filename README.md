@@ -60,6 +60,10 @@ before wiping anything).
 | Guest | guest@suitespot.test | Guest1234 |
 | Guest | maria@suitespot.test, ana@…, carlo@… | Guest1234 |
 
+These accounts work on the deployed site as well as locally. To change the live Manager password
+without touching other data, use `npm run reset-manager-password` with the production database
+connection string (see [Deployment](#deployment-vercel--render--mongodb-atlas)).
+
 Seeded bookings are placed relative to today, so there is always a guest checked in, one arriving
 today, one leaving today, plus past, future and cancelled stays.
 
@@ -72,6 +76,7 @@ today, one leaving today, plus past, future and cancelled stays.
 | `npm run lint` | ESLint over the client |
 | `npm run build` | Production build of the client into `client/dist` |
 | `npm run seed` | Reset the database in `MONGODB_URI` to demo data |
+| `npm run reset-manager-password` | Change the existing Manager's password in `MONGODB_URI`, without wiping data |
 
 ---
 
@@ -174,9 +179,15 @@ Hosting isn't specified in the proposal; this setup is an addition (see the chec
 
 1. **Atlas** — create a free cluster and a database user, allow access from `0.0.0.0/0`, and
    copy the connection string.
-2. **Render** — New → Blueprint → select this repo (`render.yaml`). Set `MONGODB_URI`, and
-   `SEED_MANAGER_PASSWORD` so the public demo password isn't the real manager login.
-   `JWT_SECRET` is generated for you. The empty database seeds itself on first start.
+2. **Render** — New → Blueprint → select this repo (`render.yaml`). Set `MONGODB_URI`.
+   `JWT_SECRET` is generated for you. The empty database seeds itself on first start. Optionally
+   set `SEED_MANAGER_PASSWORD` to give the first seed a private Manager password; it only applies
+   while the database is empty.
+
+   The submitted demo uses the README password for the Manager so it can be graded. To change
+   that password on an already-seeded database, follow
+   [Resetting the manager's password in production](#resetting-the-managers-password-in-production).
+   The command asks for a new password and confirmation before changing the existing account.
 3. **Vercel** — import the repo with the repo root as the root directory; `vercel.json` builds
    `client/` and forwards `/api/*` to Render. If Render assigned a URL other than
    `https://suitespot-api.onrender.com`, update it in `vercel.json`.
