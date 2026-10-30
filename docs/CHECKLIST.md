@@ -160,6 +160,8 @@ staff — receipt screen), `GET /api/users/:id` (manager — account screen),
 | G11 | "Today" on a UTC server vs. Philippine time | All date rules use the hotel's calendar (Asia/Manila) | ✅ T |
 | G12 | PDF schema tables garbled | Interpreted as in §5 | 🟡 please confirm |
 | G13 | Receptionist can't book walk-ins (proposal: booking is Guest-only) | Kept as written — receptionist sees a note instead of "Book" | 🟡 confirm this is intended |
+| G14 | The submission asks for a backend link, but the API has no page at `/` | ➕ `GET /` returns the service name and a link to `/api/health` | ✅ T |
+| G15 | Graders need the README's Manager password to work on the live site | ➕ `npm run reset-manager-password` (updates one account, wipes nothing); README explains it | ✅ |
 
 ## 8. Defaults we chose (🟡 — change any of these)
 

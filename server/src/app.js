@@ -23,6 +23,8 @@ export function createApp() {
   app.use(express.json({ limit: '100kb' }))
   app.use(cookieParser())
 
+  // What opens when someone visits the backend link itself; the API is under /api.
+  app.get('/', (_req, res) => res.json({ name: 'SuiteSpot API', status: 'ok', health: '/api/health' }))
   app.get('/api/health', (_req, res) => res.json({ ok: true }))
   app.use('/api/auth', authRouter)
   app.use('/api/rooms', roomsRouter)
