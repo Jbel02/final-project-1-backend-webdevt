@@ -5,7 +5,6 @@ import Field, { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
 import { CancelButton } from '../../components/NavButtons'
 import Page from '../../components/Page'
-import PasswordInput from '../../components/PasswordInput'
 import { useAuth } from '../../context/AuthContext'
 import { homePathFor } from '../../data/navItems'
 import { useForm } from '../../hooks/useForm'
@@ -68,8 +67,10 @@ export default function SignIn() {
                 />
               </Field>
               <Field id="password" label="Password" invalid={Boolean(form.errors.password)}>
-                <PasswordInput
+                <input
                   {...form.bind('password')}
+                  className="field__control"
+                  type="password"
                   autoComplete="current-password"
                   placeholder="Required"
                 />
@@ -77,10 +78,14 @@ export default function SignIn() {
             </div>
             {form.errors.email && <FieldError>{form.errors.email}</FieldError>}
             {form.errors.password && <FieldError>{form.errors.password}</FieldError>}
-            {form.formError && !form.errors.email && !form.errors.password && (
-              <FieldError>{form.formError}</FieldError>
-            )}
           </div>
+
+          {form.formError && !form.errors.email && !form.errors.password && (
+            <p className="notice notice--warning mb-4" role="alert">
+              <Icon name="warning" />
+              {form.formError}
+            </p>
+          )}
 
           <button type="submit" className="button" disabled={form.isSubmitting}>
             {form.isSubmitting ? 'Signing In…' : 'Sign In'}

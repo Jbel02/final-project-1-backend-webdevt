@@ -53,6 +53,13 @@ function checkContactAndAddress(errors, { contact, address }) {
   if (text(address).length > 200) errors.address = 'Address must be 200 characters or fewer.'
 }
 
+/** The password rule on its own — used where there is no whole account form to validate. */
+export function validateNewPassword(password) {
+  const errors = {}
+  checkPassword(errors, password)
+  return errors
+}
+
 export function validateRegistration(values) {
   const errors = {}
   checkName(errors, values.name)

@@ -206,7 +206,7 @@ function BookingForm({ room }) {
             {values.paymentStatus === 'partial'
               ? 'Pay 30% now to hold the room. The balance is settled at check-out.'
               : 'Pay the whole stay now. Nothing is due at check-out.'}{' '}
-             
+            Payment is simulated for this project — no card details are collected.
           </p>
         </div>
 

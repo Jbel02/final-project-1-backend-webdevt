@@ -5,6 +5,25 @@
 
 export const ROLES = ['guest', 'receptionist', 'manager']
 
+/**
+ * The order accounts are listed in on the Users page: managers first, then
+ * receptionists, then guests. It is the account's *role* that decides — not its
+ * name and not when it was created — so a newly added receptionist can never
+ * appear above the manager.
+ */
+export const ROLE_ORDER = ['manager', 'receptionist', 'guest']
+
+const roleRank = (role) => {
+  const rank = ROLE_ORDER.indexOf(role)
+  return rank === -1 ? ROLE_ORDER.length : rank // an unknown role goes last
+}
+
+/**
+ * Array.sort comparator by role only. `sort` is stable, so accounts that share
+ * a role keep the order they arrived in (the API sends newest first).
+ */
+export const compareByRole = (a, b) => roleRank(a.role) - roleRank(b.role)
+
 export const ROOM_TYPES = ['Single', 'Double', 'King', 'Suite']
 
 /**

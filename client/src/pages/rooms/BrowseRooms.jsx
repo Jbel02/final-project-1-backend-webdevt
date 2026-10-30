@@ -9,26 +9,13 @@ import DateField from '../../components/DateField'
 import { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
 import Page from '../../components/Page'
-import PickerField from '../../components/PickerField'
 import RoomPhoto from '../../components/RoomPhoto'
 import { LoadError } from '../../components/States'
 import Stepper from '../../components/Stepper'
 import { useApi } from '../../hooks/useApi'
 import { useDevice } from '../../context/DeviceContext'
+import { useDebouncedValue } from '../../hooks/useDebouncedValue'
 import { ROOM_TYPE_ICONS, formatPeso, formatStay, plural } from '../../utils/format'
-
-/**
- * Price / Night is a pick-one list, not two typed boxes — no keyboard, one tap.
- * The ranges follow the room-type prices (1,500 / 2,500 / 3,500 / 6,000); the
- * API's min and max are inclusive, so each range stops one peso short of the next.
- */
-const PRICE_RANGES = [
-  { value: 'any', label: 'Any Price', minPrice: '', maxPrice: '' },
-  { value: 'under-2000', label: 'Under ₱2,000', minPrice: '', maxPrice: '1999' },
-  { value: '2000-2999', label: '₱2,000 – ₱2,999', minPrice: '2000', maxPrice: '2999' },
-  { value: '3000-4999', label: '₱3,000 – ₱4,999', minPrice: '3000', maxPrice: '4999' },
-  { value: '5000-up', label: '₱5,000 and up', minPrice: '5000', maxPrice: '' },
-]
 
 /**
  * Room search for guests and visitors: date range, guest count (capacity),
@@ -45,17 +32,10 @@ export default function BrowseRooms() {
     checkIn: params.get('checkIn') ?? '',
     checkOut: params.get('checkOut') ?? '',
     guests: Number(params.get('guests')) || 1,
+    minPrice: params.get('minPrice') ?? '',
+    maxPrice: params.get('maxPrice') ?? '',
     type: params.get('type') ?? '',
   }
-
-  // The URL keeps minPrice / maxPrice; a pair that is not one of the listed
-  // ranges (an old link) reads as "Any Price".
-  const priceRange =
-    PRICE_RANGES.find(
-      (range) =>
-        range.minPrice === (params.get('minPrice') ?? '') && range.maxPrice === (params.get('maxPrice') ?? ''),
-    ) ?? PRICE_RANGES[0]
-  const { minPrice, maxPrice } = priceRange
 
   const setFilter = (name, value) => {
     const next = new URLSearchParams(params)
@@ -69,21 +49,13 @@ export default function BrowseRooms() {
     setParams(next, { replace: true })
   }
 
-  // Both bounds change together, so this is one URL update (two setFilter
-  // calls would each start from the same stale params).
-  const setPriceRange = (value) => {
-    const range = PRICE_RANGES.find((option) => option.value === value) ?? PRICE_RANGES[0]
-    const next = new URLSearchParams(params)
-    next.delete('minPrice')
-    next.delete('maxPrice')
-    if (range.minPrice) next.set('minPrice', range.minPrice)
-    if (range.maxPrice) next.set('maxPrice', range.maxPrice)
-    setParams(next, { replace: true })
-  }
-
   const hasDates = Boolean(filters.checkIn || filters.checkOut)
   const dateErrors = hasDates ? validateStayDates(filters, { today }) : {}
   const datesValid = hasDates && !hasErrors(dateErrors)
+
+  // Prices are typed, so they're debounced; everything else is a tap.
+  const minPrice = useDebouncedValue(filters.minPrice)
+  const maxPrice = useDebouncedValue(filters.maxPrice)
 
   const query = useMemo(
     () => ({
@@ -99,7 +71,7 @@ export default function BrowseRooms() {
   const { data, error, isLoading, reload } = useApi(() => roomsApi.list(query), [query])
   const rooms = data?.rooms ?? []
   const nights = datesValid ? nightsBetween(filters.checkIn, filters.checkOut) : 0
-  const isFiltered = hasDates || filters.guests > 1 || priceRange.value !== 'any' || filters.type
+  const isFiltered = hasDates || filters.guests > 1 || filters.minPrice || filters.maxPrice || filters.type
 
   return (
     <Page title="Rooms" wide>
@@ -147,14 +119,34 @@ export default function BrowseRooms() {
                 />
               </span>
             </div>
-            <PickerField
-              id="price"
-              label="Price / Night"
-              title="Price / Night"
-              value={priceRange.value}
-              options={PRICE_RANGES}
-              onChange={setPriceRange}
-            />
+            <div className="field">
+              <span className="field__label">Price / Night</span>
+              <span className="flex flex-1 items-center justify-end gap-2">
+                <input
+                  className="field__control w-20 flex-none"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  step="100"
+                  placeholder="Min"
+                  aria-label="Minimum price per night"
+                  value={filters.minPrice}
+                  onChange={(event) => setFilter('minPrice', event.target.value)}
+                />
+                <span className="t-secondary">–</span>
+                <input
+                  className="field__control w-20 flex-none"
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  step="100"
+                  placeholder="Max"
+                  aria-label="Maximum price per night"
+                  value={filters.maxPrice}
+                  onChange={(event) => setFilter('maxPrice', event.target.value)}
+                />
+              </span>
+            </div>
           </div>
         </div>
         {dateErrors.checkIn && <FieldError>{dateErrors.checkIn}</FieldError>}
@@ -177,7 +169,8 @@ export default function BrowseRooms() {
       </div>
 
       {!datesValid && !error && (
-        <p className="inline-note mb-4 pt-0">
+        <p className="notice mb-4">
+          <Icon name="calendar" />
           Choose check-in and check-out dates to see which rooms are free for your stay.
         </p>
       )}

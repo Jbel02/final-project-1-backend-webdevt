@@ -6,7 +6,6 @@ import Field, { FieldError } from '../../components/Field'
 import Icon from '../../components/Icon'
 import { CancelButton } from '../../components/NavButtons'
 import Page from '../../components/Page'
-import PasswordInput from '../../components/PasswordInput'
 import { useForm } from '../../hooks/useForm'
 
 /** Manager creates a receptionist — staff are never self-registered. */
@@ -57,8 +56,10 @@ export default function NewReceptionist() {
               />
             </Field>
             <Field id="password" label="Password" invalid={Boolean(errors.password)}>
-              <PasswordInput
+              <input
                 {...form.bind('password')}
+                className="field__control"
+                type="password"
                 autoComplete="new-password"
                 placeholder="8+ characters"
               />

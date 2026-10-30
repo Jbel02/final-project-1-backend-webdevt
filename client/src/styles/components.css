@@ -119,7 +119,6 @@
     align-items: center;
     gap: 2px;
     min-width: 0;
-    transform: translateY(-8px);
   }
 
   .nav-bar__side--trailing {
@@ -349,9 +348,7 @@
   }
 
   .device-frame[data-device='tablet'] .nav-bar__title,
-  .device-frame[data-device='desktop'] .nav-bar__title,
-  .device-frame[data-device='tablet'] .nav-bar__side,
-  .device-frame[data-device='desktop'] .nav-bar__side {
+  .device-frame[data-device='desktop'] .nav-bar__title {
     transform: none;
   }
 
@@ -728,39 +725,6 @@
 
   .field__control:disabled {
     color: var(--label-secondary);
-  }
-
-  /* Show/hide eye at the trailing edge of a password row. The negative margins
-     let the 32px target sit flush with the row padding without growing it. */
-  .field__toggle {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    margin: -6px -8px -6px -4px;
-    border: none;
-    border-radius: var(--radius-control);
-    background: transparent;
-    color: var(--label-secondary);
-    transition:
-      opacity var(--dur-fast) var(--ease-out),
-      transform var(--dur-fast) var(--ease-out);
-  }
-
-  .field__toggle:active {
-    opacity: 0.4;
-    transform: scale(0.92);
-  }
-
-  .field__toggle:focus-visible {
-    outline: 3px solid var(--accent);
-    outline-offset: 2px;
-  }
-
-  .field__toggle svg {
-    width: 22px;
-    height: 22px;
   }
 
 

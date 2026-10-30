@@ -6,6 +6,7 @@ import {
   rangesOverlap,
   todayDateOnly,
 } from '../../shared/dates.js'
+import { ROLE_ORDER, compareByRole } from '../../shared/constants.js'
 import { mealRate, quoteBooking } from '../../shared/pricing.js'
 import {
   validateBooking,
@@ -101,5 +102,22 @@ describe('validation', () => {
     const room = { roomNumber: '305', floor: 4, type: 'King', pricePerNight: 3500, maxOccupancy: 3, status: 'available' }
     expect(validateRoom(room).roomNumber).toMatch(/floor 4/)
     expect(validateRoom({ ...room, floor: 3 })).toEqual({})
+  })
+})
+
+describe('role order', () => {
+  it('is manager, receptionist, guest', () => {
+    expect(ROLE_ORDER).toEqual(['manager', 'receptionist', 'guest'])
+  })
+
+  it('sorts by role only, keeps the incoming order within a role, and puts an unknown role last', () => {
+    const accounts = [
+      { id: 1, role: 'receptionist' },
+      { id: 2, role: 'guest' },
+      { id: 3, role: 'mystery' },
+      { id: 4, role: 'manager' },
+      { id: 5, role: 'receptionist' },
+    ]
+    expect([...accounts].sort(compareByRole).map((account) => account.id)).toEqual([4, 1, 5, 2, 3])
   })
 })

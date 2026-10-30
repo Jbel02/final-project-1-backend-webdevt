@@ -168,3 +168,54 @@ describe('accounts', () => {
     await manager.delete(`/api/users/${desk.id}`).expect(204)
   })
 })
+
+describe('user list order', () => {
+  /** A manager creates several receptionists, so the newest ones would sort first by date. */
+  async function addReceptionists(manager, names) {
+    for (const name of names) {
+      await manager
+        .post('/api/users/receptionist')
+        .send({ name, email: `${name.toLowerCase().replace(/\W+/g, '.')}@suitespot.test`, password: 'Desk12345' })
+        .expect(201)
+    }
+  }
+  const roles = (users) => users.map((user) => user.role)
+  const isRoleOrdered = (users) => {
+    const rank = { manager: 0, receptionist: 1, guest: 2 }
+    return users.every((user, index) => index === 0 || rank[users[index - 1].role] <= rank[user.role])
+  }
+
+  it('lists the manager first, then receptionists, then guests — however many receptionists exist', async () => {
+    const manager = await signIn('manager')
+    await addReceptionists(manager, ['Zara Night', 'Aaron Day', 'Mik Mik'])
+
+    const { users } = (await manager.get('/api/users')).body
+    expect(users).toHaveLength(9) // 6 demo accounts + 3 new receptionists
+    expect(isRoleOrdered(users)).toBe(true)
+    expect(roles(users).slice(0, 5)).toEqual(['manager', 'receptionist', 'receptionist', 'receptionist', 'receptionist'])
+    expect(roles(users).slice(5)).toEqual(['guest', 'guest', 'guest', 'guest'])
+  })
+
+  it('uses the role, not the creation date: the newest receptionist never outranks the manager', async () => {
+    const manager = await signIn('manager')
+    await addReceptionists(manager, ['Newest Desk'])
+
+    const { users } = (await manager.get('/api/users')).body
+    expect(users[0].role).toBe('manager')
+    // Within a role the newest account still comes first.
+    expect(users.filter((user) => user.role === 'receptionist')[0].name).toBe('Newest Desk')
+  })
+
+  it('keeps the order for the staff filter and for search results', async () => {
+    const manager = await signIn('manager')
+    await addReceptionists(manager, ['Zara Night', 'Aaron Day'])
+
+    const staff = (await manager.get('/api/users?role=receptionist')).body.users
+    expect(staff.every((user) => user.role === 'receptionist')).toBe(true)
+
+    const search = (await manager.get('/api/users?q=suitespot.test')).body.users
+    expect(search.length).toBeGreaterThan(5)
+    expect(isRoleOrdered(search)).toBe(true)
+    expect(search[0].role).toBe('manager')
+  })
+})

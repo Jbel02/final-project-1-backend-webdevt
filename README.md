@@ -181,6 +181,42 @@ Hosting isn't specified in the proposal; this setup is an addition (see the chec
    `client/` and forwards `/api/*` to Render. If Render assigned a URL other than
    `https://suitespot-api.onrender.com`, update it in `vercel.json`.
 
+### Resetting the manager's password in production
+
+`SEED_MANAGER_PASSWORD` is only read when the database is **first seeded** (an empty database,
+on the server's first start). After that, changing it does nothing — the manager's password lives
+in MongoDB as a bcrypt hash, and `seedDatabase({ onlyIfEmpty: true })` skips a database that
+already has rooms. If you can't sign in as the manager on the deployed site, reset that one
+password; do **not** run `npm run seed`, which deletes every room, booking and user.
+
+From your own computer (Node 20+, `npm install --prefix server` done), with the **same
+`MONGODB_URI` that Render uses**, supplied for this one run:
+
+```powershell
+# PowerShell — in the repo's server/ folder
+$env:MONGODB_URI = "mongodb+srv://…"                    # paste the Atlas string; don't save it in a file
+npm run reset-manager-password -- --dry-run             # shows the database and the manager it found; changes nothing
+npm run reset-manager-password                          # asks for the new password (hidden), twice, then for y/N
+Remove-Item Env:MONGODB_URI                             # forget the connection string
+```
+
+```bash
+# macOS / Linux
+cd server
+MONGODB_URI='mongodb+srv://…' npm run reset-manager-password -- --dry-run
+MONGODB_URI='mongodb+srv://…' npm run reset-manager-password
+```
+
+- It prints the **database name and host** (never credentials) — check they are production's.
+- It updates the `passwordHash` of the one account whose role is `manager` and whose email is
+  `manager@suitespot.test` (override with `MANAGER_EMAIL`). It refuses any other role, never
+  creates an account, and never reads or writes rooms, bookings or other users.
+- The password is bcrypt-hashed with the same cost as sign-up. It is typed into a hidden prompt, or
+  taken from `MANAGER_NEW_PASSWORD` for non-interactive runs; it is never printed or stored.
+  Passwords need 8+ characters with a letter and a number, like every other account.
+- Afterwards it reads the hash back and confirms it matches, so "Done" means sign-in will work.
+- Existing manager sessions stay signed in until their cookie expires (7 days).
+
 The browser only ever talks to the Vercel domain, so the auth cookie is first-party everywhere
 (Safari blocks cross-site cookies). Render's free tier sleeps when idle — open the site a minute
 before a demo.
