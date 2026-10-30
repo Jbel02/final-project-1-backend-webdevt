@@ -11,7 +11,7 @@ import { LoadError, LoadingRows } from '../../components/States'
 import StatusBadge from '../../components/StatusBadge'
 import { useApi } from '../../hooks/useApi'
 import { plural } from '../../utils/format'
-import { visibleUsers } from '../../utils/users'
+import { sortUsersByRole } from '../../utils/userOrder'
 
 const SCOPES = [
   { value: 'all', label: 'All' },
@@ -28,7 +28,14 @@ export default function Users() {
   const { data, error, reload } = useApi(() => usersApi.list(), [])
 
   const term = deferredSearch.trim().toLowerCase()
-  const users = visibleUsers(data?.users ?? [], scope, term)
+  // Sorted by role after filtering, so All, Staff and search results all agree.
+  const users = sortUsersByRole(
+    (data?.users ?? []).filter(
+      (user) =>
+        (scope === 'all' || (scope === 'guest' ? user.role === 'guest' : user.role !== 'guest')) &&
+        (!term || user.name.toLowerCase().includes(term) || user.email.includes(term)),
+    ),
+  )
 
   return (
     <Page

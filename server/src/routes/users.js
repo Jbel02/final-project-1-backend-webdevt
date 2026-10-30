@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import { Router } from 'express'
-import { ACTIVE_BOOKING_STATUSES, ROLES, compareByRole } from '../../../shared/constants.js'
+import { ACTIVE_BOOKING_STATUSES, ROLES } from '../../../shared/constants.js'
 import { validateProfile, validateStaffAccount } from '../../../shared/validation.js'
 import { authenticate, requireRole } from '../middleware/auth.js'
 import { HttpError, assertValid } from '../middleware/errors.js'
@@ -59,9 +59,7 @@ usersRouter.get('/', async (req, res) => {
     filter.$or = [{ name: pattern }, { email: pattern }]
   }
 
-  // Newest first within a role; the role order itself (manager, receptionist,
-  // guest) is applied on top, so the manager is always at the head of the staff.
-  const users = (await User.find(filter).sort({ createdAt: -1 })).sort(compareByRole)
+  const users = await User.find(filter).sort({ createdAt: -1 })
   res.json({ users })
 })
 

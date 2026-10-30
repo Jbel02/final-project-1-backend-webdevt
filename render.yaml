@@ -19,5 +19,5 @@ services:
         sync: false
       - key: JWT_SECRET
         generateValue: true
-      - key: SEED_MANAGER_PASSWORD # manager password for the FIRST seed only; later changes do nothing (see README: resetting the manager's password)
+      - key: SEED_MANAGER_PASSWORD # manager password for the first, automatic seed
         sync: false

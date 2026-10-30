@@ -249,7 +249,7 @@
    screen, so this stays scoped to `[data-device='desktop']`. */
 .stage[data-device='desktop'] .bar-button--floating {
   position: fixed;
-  top: 10px;
+  top: 2px;
   right: 64px;
   z-index: 90;
 }
