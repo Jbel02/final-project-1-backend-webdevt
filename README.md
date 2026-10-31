@@ -9,7 +9,7 @@ and the manager runs rooms, bookings and accounts.
 | | |
 | --- | --- |
 | **Frontend repository** | https://github.com/Jbel02/final-project-1-frontend-webdevt |
-| **Frontend (live)** | `<paste the Vercel link>` |
+| **Frontend (live)** | `https://finals-project-webdevt.vercel.app` |
 | **Backend (live)** | https://suitespot-api.onrender.com — [`/api/health`](https://suitespot-api.onrender.com/api/health) |
 | **Database** | MongoDB Atlas |
 
